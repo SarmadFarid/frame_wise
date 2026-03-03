@@ -111,7 +111,7 @@ class AppTheme {
         bgInverse: AppColors.white,
         bgBrand: AppColors.brandBlue,
 
-        surfacePrimary: AppColors.greyDark,
+        surfacePrimary: AppColors.bgDark,
         surfaceSecondary: Color(0xff2A2A2A),
         surfaceElevated: Color(0xff323232),
         surfaceCard: AppColors.greyDark,

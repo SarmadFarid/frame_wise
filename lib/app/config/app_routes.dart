@@ -1,5 +1,8 @@
-import 'package:frame_wise/app/mvvm/view/bottomNavigation/dashboard_screen.dart';
+import 'package:frame_wise/app/mvvm/view/bottomNavigation/bottom_navigation.dart';
+import 'package:frame_wise/app/mvvm/view/settings/profile_screen.dart';
 import 'package:frame_wise/app/mvvm/view/signup/sign_up_view.dart';
+import 'package:frame_wise/app/mvvm/view/subscription/subscription_screen.dart';
+import 'package:frame_wise/app/mvvm/view_model/settings/setting_bindings.dart';
 import 'package:get/get.dart';
 
 import '../mvvm/view/splash/splash_view.dart';
@@ -14,6 +17,8 @@ abstract class AppRoutes {
   static const loginView = '/login';
   static const signupView = '/signup';
   static const dashBoard = '/dashboard';
+  static const subscription = '/subscription';
+  static const profile = '/profile';
 }
 
 
@@ -39,9 +44,19 @@ abstract class AppPages {
     ),
      GetPage(
       name: AppRoutes.dashBoard,
-      page: () => const DashboardScreen(),
+      page: () => const AppBottomNavigation(),
       transition: Transition.fadeIn, 
-      
+      bindings: [SettingBindings()]  
+    ),
+      GetPage(
+      name: AppRoutes.subscription,
+      page: () => const SubscriptionScreen(),
+      transition: Transition.rightToLeftWithFade, 
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () =>   ProfileScreen(),
+      transition: Transition.rightToLeftWithFade, 
     ),
 
   ];

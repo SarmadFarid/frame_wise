@@ -4,11 +4,11 @@ import 'package:frame_wise/app/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';
 
-class AppBottomNavigation extends StatelessWidget {
+class BottomNavigationWidget extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const AppBottomNavigation({
+  const BottomNavigationWidget({
     Key? key,
     required this.currentIndex,
     required this.onTap,

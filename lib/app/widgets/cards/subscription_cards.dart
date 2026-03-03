@@ -80,7 +80,7 @@ class SubscriptionCard extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 22.h),
 
           CustomText(
             'Plan includes :',
@@ -118,7 +118,7 @@ class SubscriptionCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
 
           /// Button
           SizedBox(
@@ -139,3 +139,4 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 }
+
