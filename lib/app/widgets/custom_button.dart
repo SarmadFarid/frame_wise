@@ -8,8 +8,9 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color? bgColor; 
   final Color? textColor; 
+  final double? width; 
 
-  const CustomButton({super.key, required this.text, required this.onPressed, this.bgColor, this.textColor});
+  const CustomButton({super.key, required this.text, required this.onPressed, this.bgColor, this.textColor, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CustomButton extends StatelessWidget {
     final textTheme = context.themeText;
 
     return SizedBox(
-      width: double.infinity,
+      width: width ?? double.infinity,
       height: 52.h,
       child: ElevatedButton(
         onPressed: onPressed,

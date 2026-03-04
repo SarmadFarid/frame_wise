@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/config/app_assets.dart';
 import 'package:frame_wise/app/config/app_routes.dart';
+import 'package:frame_wise/app/mvvm/view_model/settings/notification_controller.dart';
 import 'package:frame_wise/app/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/cards/profile_cards.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
@@ -18,6 +19,9 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textstyle = context.themeText;
     final colors = context.colors;
+
+    final NotificationController notificationController =
+        Get.find<NotificationController>();
 
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
@@ -102,8 +106,8 @@ class SettingScreen extends StatelessWidget {
                         icon: Icons.person_add_alt_sharp,
                         title: 'Profile',
                         onTap: () {
-                          print('ontap profile tab '); 
-                          Get.toNamed(AppRoutes.profile); 
+                          print('ontap profile tab ');
+                          Get.toNamed(AppRoutes.profile);
                         },
                         context: context,
                       ),
@@ -111,7 +115,12 @@ class SettingScreen extends StatelessWidget {
                       _buildMenuItem(
                         icon: Icons.notifications,
                         title: 'Notifications',
-                        onTap: () {},
+                        onTap: () {
+                          ProfileCards.showNotificationSettingsDialog(
+                            context,
+                            controller: notificationController,
+                          );
+                        },
                         context: context,
                       ),
 
@@ -127,109 +136,118 @@ class SettingScreen extends StatelessWidget {
                       Divider(height: 10.h, color: colors.surfaceSecondary),
 
                       _buildMenuItem(
+                        icon: Icons.security,
+                        title: 'Login & Security',
+                        onTap: () {
+                          Get.toNamed(AppRoutes.loginAndSecurityScreen);
+                        },
+                        context: context,
+                      ),
+
+                      _buildMenuItem(
                         icon: Icons.call_outlined,
                         title: 'Call Us',
                         context: context,
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            barrierColor: colors.brandSecondary.withOpacity(
-                              0.5,
-                            ),
-                            builder: (context) {
-                              return Dialog(
-                                insetPadding: EdgeInsets.symmetric(
-                                  horizontal: 2.w,
-                                ),
-                                shape: RoundedRectangleBorder(
+                          Get.dialog(
+                            Dialog(
+                              insetPadding: EdgeInsets.symmetric(
+                                horizontal: 2.w,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.r),
+                              ),
+                              child: Container(
+                                width: Get.width * 0.85,
+                                padding: EdgeInsets.all(20.w),
+                                decoration: BoxDecoration(
+                                  color: colors.surfacePrimary,
                                   borderRadius: BorderRadius.circular(16.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white,
+                                      blurRadius: 6.r,
+                                    ),
+                                  ],
                                 ),
-                                child: Container(
-                                  width: Get.width * 0.85,
-                                  padding: EdgeInsets.all(20.w),
-                                  decoration: BoxDecoration(
-                                    color: colors.surfacePrimary,
-                                    borderRadius: BorderRadius.circular(16.r),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Close Button
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: GestureDetector(
-                                          onTap: () => Navigator.pop(context),
-                                          child: Container(
-                                            width: 24.w,
-                                            height: 24.h,
-                                            decoration: BoxDecoration(
-                                              color: colors.brandSecondary,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                              size: 16.sp,
-                                            ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Close Button
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.pop(context),
+                                        child: Container(
+                                          width: 24.w,
+                                          height: 24.h,
+                                          decoration: BoxDecoration(
+                                            color: colors.brandSecondary,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 16.sp,
                                           ),
                                         ),
                                       ),
+                                    ),
 
-                                      SizedBox(height: 6.h),
+                                    SizedBox(height: 6.h),
 
-                                      // Phone Icon
-                                      Icon(
-                                        Icons.wifi_calling_3,
-                                        color: colors.textDark,
-                                        size: 30.sp,
+                                    // Phone Icon
+                                    Icon(
+                                      Icons.wifi_calling_3,
+                                      color: colors.textDark,
+                                      size: 30.sp,
+                                    ),
+
+                                    SizedBox(height: 16.h),
+
+                                    // Title
+                                    CustomText(
+                                      'Call us to get in touch',
+                                      style: textstyle.titleMedium,
+                                    ),
+
+                                    SizedBox(height: 10.h),
+
+                                    // Timing
+                                    CustomText(
+                                      '9:00 AM to 6:00 PM, Monday to Friday',
+                                      style: textstyle.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
                                       ),
+                                    ),
 
-                                      SizedBox(height: 16.h),
+                                    SizedBox(height: 25.h),
 
-                                      // Title
-                                      CustomText(
-                                        'Call us to get in touch',
-                                        style: textstyle.titleMedium,
+                                    // Phone Number Button
+                                    CustomButton(
+                                      text: '800-38249953',
+                                      onPressed: () {},
+                                      bgColor: colors.brandSecondary,
+                                      textColor: Colors.white,
+                                    ),
+
+                                    SizedBox(height: 20.h),
+
+                                    // Email Text
+                                    CustomRichText(
+                                      maxLines: 2,
+                                      firstText: 'Or email us at : ',
+                                      secondText: ' customersupport@xyz.com',
+                                      style: textstyle.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w500,
                                       ),
+                                    ),
 
-                                      SizedBox(height: 10.h),
-
-                                      // Timing
-                                      CustomText(
-                                        '9:00 AM to 6:00 PM, Monday to Friday',
-                                        style: textstyle.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-
-                                      SizedBox(height: 25.h),
-
-                                      // Phone Number Button
-                                      CustomButton(
-                                        text: '800-38249953',
-                                        onPressed: () {},
-                                        bgColor: colors.brandSecondary,
-                                        textColor: Colors.white,
-                                      ),
-
-                                      SizedBox(height: 20.h),
-
-                                      // Email Text
-                                      CustomRichText(
-                                        maxLines: 2,
-                                        firstText: 'Or email us at : ',
-                                        secondText: ' customersupport@xyz.com',
-                                        style: textstyle.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-
-                                      SizedBox(height: 26.h),
-                                    ],
-                                  ),
+                                    SizedBox(height: 26.h),
+                                  ],
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -241,13 +259,16 @@ class SettingScreen extends StatelessWidget {
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: colors.surfacePrimary,
-                            builder: (_) => ConfirmationBottomSheet(
-                              title: 'Logout',
-                              description: 'Are you sure you want to log out?',
-                              onConfirm: () {
-                                Get.back();
-                              },
-                            ),
+                            builder: (_) =>
+                                ProfileCards.confirmationBottomSheet(
+                                  context: context,
+                                  title: 'Logout',
+                                  description:
+                                      'Are you sure you want to log out?',
+                                  onConfirm: () {
+                                    Get.back();
+                                  },
+                                ),
                           );
                         },
                         child: Row(

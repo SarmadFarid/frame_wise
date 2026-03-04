@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/config/app_routes.dart';
 import 'package:frame_wise/app/mvvm/view_model/settings/profile_controller.dart';
 import 'package:frame_wise/app/theme/theme_extensions.dart';
+import 'package:frame_wise/app/widgets/cards/profile_cards.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
@@ -73,7 +74,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
               ),
-            SizedBox(height: 12.h),
+              SizedBox(height: 12.h),
               CustomTextField(
                 label: "Email",
                 initialValue: 'sarmad@gamil.com',
@@ -89,7 +90,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
               ),
-SizedBox(height: 12.h),
+              SizedBox(height: 12.h),
               CustomTextField(
                 label: "Password",
                 hint: "Enter your Password",
@@ -107,18 +108,22 @@ SizedBox(height: 12.h),
                 ),
               ),
 
-              Align( 
-                alignment: Alignment.centerRight,
-                child: CustomText(
-                  'Change Password',
-                  style: context.themeText.labelLarge?.copyWith(
-                    color: context.colors.textPrimary,
-                    fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                  ProfileCards.showChangePassDialog(context);
+                },
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CustomText(
+                    'Change Password',
+                    style: context.themeText.labelLarge?.copyWith(
+                      color: context.colors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
-SizedBox(height: 12.h),
-  
+              SizedBox(height: 12.h),
 
               CustomTextField(
                 label: "Phone Number",
@@ -135,22 +140,22 @@ SizedBox(height: 12.h),
                   ),
                 ),
               ),
-            SizedBox(height: 12.h),
+              SizedBox(height: 12.h),
 
-              Obx( () => 
-                CustomTextField(
+              Obx(
+                () => CustomTextField(
                   label: "Bio",
                   hint: "your bio",
                   maxLines: 4,
                   focusNode: controller.bioFocus,
                   prefixIcon: Icons.description_outlined,
                   initialValue: 'i am passionate flutter developer',
-                  
-                  readOnly: controller.readOnly.value ,
+
+                  readOnly: controller.readOnly.value,
                   suffixWidget: IconButton(
                     onPressed: () {
-                      controller.readOnly.value = false ; 
-                      controller.bioFocus.requestFocus() ;
+                      controller.readOnly.value = false;
+                      controller.bioFocus.requestFocus();
                     },
                     icon: Icon(
                       Icons.edit,
@@ -168,7 +173,7 @@ SizedBox(height: 12.h),
                 children: [
                   Expanded(
                     child: CustomButton(
-                      bgColor: context.colors.brandPrimary ,
+                      bgColor: context.colors.brandPrimary,
                       text: "Update Profile",
                       onPressed: () {
                         // Controller logic
@@ -178,11 +183,17 @@ SizedBox(height: 12.h),
                   ),
                   SizedBox(width: 8.h),
                   Expanded(
-                    child:  TextButton(onPressed: (){}, child: CustomText('Reset', style: context.themeText.labelLarge?.copyWith(
-                      color: context.colors.textBrand, 
-                      fontWeight: FontWeight.w600, 
-                      fontSize: 16.sp
-                    ),) )
+                    child: TextButton(
+                      onPressed: () {},
+                      child: CustomText(
+                        'Reset',
+                        style: context.themeText.labelLarge?.copyWith(
+                          color: context.colors.textBrand,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:frame_wise/app/mvvm/view/bottomNavigation/bottom_navigation.dart';
+import 'package:frame_wise/app/mvvm/view/settings/login_security_screen.dart';
 import 'package:frame_wise/app/mvvm/view/settings/profile_screen.dart';
 import 'package:frame_wise/app/mvvm/view/signup/sign_up_view.dart';
 import 'package:frame_wise/app/mvvm/view/subscription/subscription_screen.dart';
@@ -19,6 +20,7 @@ abstract class AppRoutes {
   static const dashBoard = '/dashboard';
   static const subscription = '/subscription';
   static const profile = '/profile';
+  static const loginAndSecurityScreen = '/LoginAndSecurityScreen';
 }
 
 
@@ -56,6 +58,11 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.profile,
       page: () =>   ProfileScreen(),
+      transition: Transition.rightToLeftWithFade, 
+    ),
+    GetPage(
+      name: AppRoutes.loginAndSecurityScreen,
+      page: () =>   LoginAndSecurityScreen(),
       transition: Transition.rightToLeftWithFade, 
     ),
 

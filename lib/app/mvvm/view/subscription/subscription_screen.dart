@@ -20,8 +20,30 @@ class SubscriptionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// ---------- HEADER ----------
-              SizedBox(height: 20.h),
+                SizedBox(height: 5.h),
+
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: SizedBox(
+                  height: 25.h,
+                  width: 25.h,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: context.colors.bgInverse,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: context.colors.textInverse,
+                        size: 15.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+               SizedBox(height: 20.h),
               CustomRichText(
                 maxLines: 4,
                 textAlign: TextAlign.center,
