@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/widgets/cards/subscription_cards.dart';
-import 'package:frame_wise/app/theme/app_fonts_config.dart';
-import 'package:frame_wise/app/theme/theme_extensions.dart';
+import 'package:frame_wise/app/core/theme/app_fonts_config.dart';
+import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';

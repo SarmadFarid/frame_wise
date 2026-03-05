@@ -1,4 +1,4 @@
-import '../config/app_enums.dart';
+import '../core/utills/app_enums.dart';
 
 /// Global variables for the LayerX app.
 class GlobalVariables {

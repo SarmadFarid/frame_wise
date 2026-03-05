@@ -3,12 +3,13 @@ import 'package:frame_wise/app/mvvm/view/settings/login_security_screen.dart';
 import 'package:frame_wise/app/mvvm/view/settings/profile_screen.dart';
 import 'package:frame_wise/app/mvvm/view/signup/sign_up_view.dart';
 import 'package:frame_wise/app/mvvm/view/subscription/subscription_screen.dart';
+import 'package:frame_wise/app/mvvm/view_model/project/project_binding.dart';
 import 'package:frame_wise/app/mvvm/view_model/settings/setting_bindings.dart';
 import 'package:get/get.dart';
 
-import '../mvvm/view/splash/splash_view.dart';
-import '../mvvm/view/login/login_view.dart';
-import '../mvvm/view_model/splash/splash_binding.dart';
+import '../../mvvm/view/splash/splash_view.dart';
+import '../../mvvm/view/login/login_view.dart';
+import '../../mvvm/view_model/splash/splash_binding.dart';
 
 /// Defines navigation routes for the LayerX app.
 abstract class AppRoutes {
@@ -48,7 +49,7 @@ abstract class AppPages {
       name: AppRoutes.dashBoard,
       page: () => const AppBottomNavigation(),
       transition: Transition.fadeIn, 
-      bindings: [SettingBindings()]  
+      bindings: [SettingBindings(), ProjectBinding() ]  
     ),
       GetPage(
       name: AppRoutes.subscription,

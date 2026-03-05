@@ -1,4 +1,4 @@
-import '../../config/app_urls.dart';
+import '../../core/utills/app_urls.dart';
 import '../../mvvm/model/api_response_model/api_response.dart';
 // import '../../mvvm/model/body_model/driver_signup_body_model.dart';
 // import '../../mvvm/model/body_model/garage_signup_body_model.dart';

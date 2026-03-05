@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frame_wise/app/theme/theme_extensions.dart';
+import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -29,7 +29,7 @@ class CustomText extends StatelessWidget {
     this.letterSpacing,
     this.height,
     this.softWrap,
-    this.selectable,
+    this.selectable,  
   });
 
   @override

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../services/logger_service.dart';
+import '../../services/logger_service.dart';
 
 class Utils {
   static String formatDate(DateTime? date) =>

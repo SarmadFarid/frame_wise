@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frame_wise/app/config/app_routes.dart';
+import 'package:frame_wise/app/core/utills/app_routes.dart';
 import 'package:frame_wise/app/mvvm/view_model/settings/profile_controller.dart';
-import 'package:frame_wise/app/theme/theme_extensions.dart';
+import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/cards/profile_cards.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';

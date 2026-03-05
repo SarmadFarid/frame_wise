@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/mvvm/view_model/theme/theme_controller.dart';
 import 'package:get/get.dart';
 
-import 'config/app_routes.dart';
-import 'theme/app_theme.dart';
+import 'core/utills/app_routes.dart';
+import 'core/theme/app_theme.dart';
 
 class LayerXApp extends StatelessWidget {
   LayerXApp({super.key});

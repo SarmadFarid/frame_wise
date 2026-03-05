@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frame_wise/app/theme/theme_extensions.dart';
+import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 
 class CustomRichText extends StatelessWidget {
   final String firstText;

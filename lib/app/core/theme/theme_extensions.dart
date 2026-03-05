@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frame_wise/app/theme/app_fonts_config.dart';
+import 'package:frame_wise/app/core/theme/app_fonts_config.dart';
 import 'app_theme_extension.dart';
 
 extension ThemeGetter on BuildContext {

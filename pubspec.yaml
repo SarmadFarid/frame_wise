@@ -36,7 +36,6 @@ dependencies:
   # flutter_local_notifications: ^19.5.0 
   permission_handler: any
   flutter_timezone: ^5.0.1
-
   layerx_generator: ^2.0.2
   cupertino_icons: ^1.0.8
   get: ^4.7.2
@@ -48,6 +47,10 @@ dependencies:
   intl: ^0.20.2
   get_storage: ^2.1.1
   carousel_slider: ^5.1.2
+  video_player: 
+  ffmpeg_kit_flutter_new: ^4.1.0
+  video_thumbnail: ^0.5.6
+
 
 dev_dependencies:
   flutter_test:

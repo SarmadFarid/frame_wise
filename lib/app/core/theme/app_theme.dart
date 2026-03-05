@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frame_wise/app/theme/app_text_theme.dart';
+import 'package:frame_wise/app/core/theme/app_text_theme.dart';
 import 'app_colors.dart';
 import 'app_theme_extension.dart';
 

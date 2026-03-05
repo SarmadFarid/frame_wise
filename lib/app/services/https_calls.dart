@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
-import '../config/app_urls.dart';
+import '../core/utills/app_urls.dart';
 import 'logger_service.dart';
 import 'shared_preferences_service.dart';
 
