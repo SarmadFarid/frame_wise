@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/config/app_routes.dart';
+import 'package:frame_wise/app/widgets/cards/profile_cards.dart';
 import 'package:get/get.dart';
 import 'package:frame_wise/app/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
@@ -71,7 +72,7 @@ class LoginScreen extends GetView<AuthController> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // Navigate to forgot password
+                    ProfileCards.showForgotPassDialog(context); 
                   },
                   child: CustomText(
                     "Forgot Password?",

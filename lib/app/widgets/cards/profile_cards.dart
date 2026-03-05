@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frame_wise/app/config/app_assets.dart';
 import 'package:frame_wise/app/mvvm/view_model/settings/notification_controller.dart';
 import 'package:frame_wise/app/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
+import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text_field.dart';
 import 'package:get/get.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
@@ -237,20 +239,19 @@ class ProfileCards {
                 isPassword: true,
               ),
 
-              Align(
-                heightFactor: 0,
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: CustomText(
-                    'Forgot Password',
-                    color: context.colors.textPrimary,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ),
-
+              // Align(
+              //   heightFactor: 0,
+              //   alignment: Alignment.centerRight,
+              //   child: TextButton(
+              //     onPressed: () {},
+              //     child: CustomText(
+              //       'Forgot Password',
+              //       color: context.colors.textPrimary,
+              //       fontWeight: FontWeight.w500,
+              //       fontSize: 14.sp,
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 10.h),
               CustomTextField(
                 label: 'New Password',
@@ -271,7 +272,13 @@ class ProfileCards {
                   Expanded(
                     child: CustomButton(
                       text: 'Save',
-                      onPressed: () {},
+                      onPressed: () async {
+                        Get.back();
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          // ignore: use_build_context_synchronously
+                          showSuccesssDialog(context);
+                        });
+                      },
                       bgColor: context.colors.textBrand,
                       textColor: context.colors.textInverse,
                     ),
@@ -292,6 +299,254 @@ class ProfileCards {
                   ),
                 ],
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void showCreateNewPassDialog(BuildContext context) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+
+        elevation: 2,
+        child: Container(
+          width: Get.width * 0.85,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: context.colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 6.r)],
+          ),
+
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomText(
+                textAlign: TextAlign.center,
+                'Create New Password',
+                style: context.themeText.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.textBrand,
+                ),
+              ),
+
+              SizedBox(height: 30.h),
+
+              CustomTextField(
+                label: 'New Password',
+                hint: 'Enter your new password',
+                isPassword: true,
+              ),
+
+              CustomTextField(
+                label: 'Confirm Password',
+                hint: 'Re-enter your new password',
+                isPassword: true,
+              ),
+
+              SizedBox(height: 15.h),
+
+              CustomButton(
+                text: 'Reset Password',
+                onPressed: () async {
+                  Get.back();
+                  Future.delayed(Duration(milliseconds: 200), () {
+                    showSuccesssDialog(context);
+                  });
+                },
+                bgColor: context.colors.textBrand,
+                textColor: context.colors.textInverse,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void showForgotPassDialog(BuildContext context) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+
+        elevation: 2,
+        child: Container(
+          width: Get.width * 0.85,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: context.colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 6.r)],
+          ),
+
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomText(
+                textAlign: TextAlign.center,
+                'Forgot Password',
+                style: context.themeText.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.textBrand,
+                ),
+              ),
+              SizedBox(height: 3.h),
+              CustomText(
+                textAlign: TextAlign.center,
+                'Enter the email address you used to create the account, and we will send you instruction to reset your password',
+                style: context.themeText.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.colors.textDark.withValues(alpha: 0.7),
+                ),
+              ),
+
+              SizedBox(height: 30.h),
+              CustomTextField(
+                label: 'Email Address',
+                hint: 'enter your email',
+                prefixIcon: Icons.email_outlined,
+              ),
+
+              SizedBox(height: 10.h),
+
+              CustomButton(
+                text: 'Send Email',
+                onPressed: () {
+                  Get.back();
+                  Future.delayed(Duration(milliseconds: 200), () {
+                    showEmailSendDialog(context);
+                  });
+                },
+                bgColor: context.colors.brandPrimary,
+                textColor: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void showEmailSendDialog(BuildContext context) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Container(
+          width: Get.width * 0.85,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: context.colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 6.r)],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    height: 30.h,
+                    width: 30.h,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceInput,
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.mail_outline,
+                          color: context.colors.textDark.withValues(alpha: 0.6),
+                          size: 18.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  CustomText(
+                    'Email Sent',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.textDark,
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h),
+
+              CustomRichText(
+                maxLines: 4,
+                firstText: 'We have sent you email at ',
+                secondText: 'fsana2345@gmail.com. ',
+                thirdText:
+                    'Check your inbox and follow the instructions to reset your password.',
+                style: context.themeText.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.colors.textGrey,
+                ),
+                secondTextStyle: context.themeText.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.textGrey,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              CustomRichText(
+                maxLines: 4,
+                firstText: 'Did not recieve the email',
+                secondText: ' Resend Email ',
+              ),
+
+              SizedBox(height: 20.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void showSuccesssDialog(BuildContext context) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Container(
+          width: Get.width * 0.85,
+          height: 300.h,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: context.colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 6.r)],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(AppImages.success),
+              SizedBox(height: 15.h),
+              CustomText(
+                textAlign: TextAlign.center,
+                'Password Changed \n Successfully',
+                fontWeight: FontWeight.w700,
+                fontSize: 18.sp,
+              ),
+              SizedBox(height: 15.h),
             ],
           ),
         ),

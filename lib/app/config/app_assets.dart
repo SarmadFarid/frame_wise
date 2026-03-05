@@ -5,5 +5,5 @@ class AppImages {
   static const String slideOne = '$imagesPath/slide1.jpg';
   static const String sllideTwo = '$imagesPath/slide2.jpg';
   static const String profileImage = '$imagesPath/profile_image.png';
+  static const String success = '$imagesPath/success.png';
 }
- 
