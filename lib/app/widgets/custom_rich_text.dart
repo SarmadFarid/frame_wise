@@ -17,7 +17,7 @@ class CustomRichText extends StatelessWidget {
   final bool? softWrap;
 
   const CustomRichText({
-    Key? key,
+    super.key,
     required this.firstText,
     required this.secondText,
     this.thirdText,
@@ -29,7 +29,7 @@ class CustomRichText extends StatelessWidget {
     this.maxLines,
     this.overflow,
     this.softWrap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

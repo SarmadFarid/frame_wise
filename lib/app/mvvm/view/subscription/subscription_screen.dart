@@ -8,7 +8,7 @@ import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';
 
 class SubscriptionScreen extends StatelessWidget {
-  const SubscriptionScreen({Key? key}) : super(key: key);
+  const SubscriptionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

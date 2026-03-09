@@ -6,11 +6,10 @@ import 'package:frame_wise/app/core/utills/app_routes.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';
-import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';
 
 class SplashIntroScreen extends StatefulWidget {
-  const SplashIntroScreen({Key? key}) : super(key: key);
+  const SplashIntroScreen({super.key});
 
   @override
   State<SplashIntroScreen> createState() => _SplashIntroScreenState();

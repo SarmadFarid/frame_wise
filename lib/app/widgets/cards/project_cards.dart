@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';

@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
-import 'package:get/get.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
   const BottomNavigationWidget({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

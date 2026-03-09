@@ -9,10 +9,9 @@ import 'package:frame_wise/app/mvvm/view_model/auth/auth_ocntroller.dart';
 import 'package:frame_wise/app/mvvm/view_model/theme/theme_controller.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_text_field.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignUpScreen extends GetView<AuthController> {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

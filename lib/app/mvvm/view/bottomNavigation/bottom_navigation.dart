@@ -5,7 +5,7 @@ import 'package:frame_wise/app/mvvm/view/project/project_screen.dart';
 import 'package:frame_wise/app/mvvm/view/settings/settting_screen.dart';
 
 class AppBottomNavigation extends StatefulWidget {
-  const AppBottomNavigation({Key? key}) : super(key: key);
+  const AppBottomNavigation({super.key});
 
   @override
   State<AppBottomNavigation> createState() => _AppBottomNavigationState();

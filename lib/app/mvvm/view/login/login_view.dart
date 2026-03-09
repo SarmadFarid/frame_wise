@@ -11,7 +11,7 @@ import 'package:frame_wise/app/widgets/custom_text_field.dart';
 import 'package:frame_wise/app/mvvm/view_model/auth/auth_ocntroller.dart';
 
 class LoginScreen extends GetView<AuthController> {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -13,14 +13,14 @@ class SubscriptionCard extends StatelessWidget {
   final String buttonText;
 
   const SubscriptionCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.price,
     required this.duration,
     required this.features,
     required this.isHighlighted,
     required this.buttonText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
