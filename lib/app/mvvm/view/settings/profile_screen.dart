@@ -175,7 +175,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       text: "Update Profile",
                       onPressed: () {
                         // Controller logic
-                        print("Registering user...");
+                        // print("Registering user...");
                       },
                     ),
                   ),

@@ -25,7 +25,7 @@ class BottomNavigationWidget extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha:0.05),
             blurRadius: 10,
             offset: const Offset(0, -3),
           ),
@@ -55,7 +55,7 @@ class BottomNavigationWidget extends StatelessWidget {
               topRight: Radius.circular(index == 3 ? 25.r : 0),
             ),
             color: isSelected
-                ? context.colors.brandPrimary.withOpacity(0.1)
+                ? context.colors.brandPrimary.withValues(alpha:0.1)
                 : Colors.transparent,
           ),
           child: Column(

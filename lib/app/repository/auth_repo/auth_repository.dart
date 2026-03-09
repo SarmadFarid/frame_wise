@@ -1,9 +1,9 @@
 // import '../../mvvm/model/body_model/driver_signup_body_model.dart';
 // import '../../mvvm/model/body_model/garage_signup_body_model.dart';
-import '../../services/https_calls.dart';
+// import '../../services/https_calls.dart';
 
 class AuthRepository {
-  final HttpsCalls _httpsCalls = HttpsCalls();
+  // final HttpsCalls _httpsCalls = HttpsCalls();
 
   // ================= DRIVER =================
 

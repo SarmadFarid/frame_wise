@@ -12,6 +12,7 @@ import '../core/utills/app_urls.dart';
 import 'logger_service.dart';
 import 'shared_preferences_service.dart';
 
+// ignore: constant_identifier_names
 enum HttpMethod { GET, POST, PUT, PATCH, DELETE }
 
 /// Simple cancellation token for requests.

@@ -71,7 +71,7 @@ class SettingScreen extends StatelessWidget {
                                 child: Container(
                                   height: 50.r,
                                   width: double.infinity,
-                                  color: Colors.black.withOpacity(0.65),
+                                  color: Colors.black.withValues(alpha:0.65),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -104,7 +104,7 @@ class SettingScreen extends StatelessWidget {
                         icon: Icons.person_add_alt_sharp,
                         title: 'Profile',
                         onTap: () {
-                          print('ontap profile tab ');
+                          // print('ontap profile tab ');
                           Get.toNamed(AppRoutes.profile);
                         },
                         context: context,

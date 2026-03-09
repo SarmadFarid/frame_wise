@@ -6,7 +6,6 @@ import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:frame_wise/app/mvvm/view_model/auth/auth_ocntroller.dart';
-import 'package:frame_wise/app/mvvm/view_model/theme/theme_controller.dart';
 import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_text_field.dart';
 
@@ -15,7 +14,7 @@ class SignUpScreen extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
+    // final themeController = Get.find<ThemeController>();
 
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
@@ -81,8 +80,6 @@ class SignUpScreen extends GetView<AuthController> {
               CustomButton(
                 text: "Register ",
                 onPressed: () {
-                  // Controller logic
-                  print("Registering user...");
                 },
               ),
 
