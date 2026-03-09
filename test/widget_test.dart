@@ -7,12 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:frame_wise/app/mvvm/view_model/theme/theme_controller.dart';
 
 import 'package:frame_wise/main.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
+    Get.put(ThemeController()); 
     await tester.pumpWidget(const MyApp());
 
     // Verify that our counter starts at 0.
