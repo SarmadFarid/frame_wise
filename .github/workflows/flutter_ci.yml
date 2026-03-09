@@ -88,9 +88,6 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build Android AppBundle
-        run: flutter build appbundle --release
-
       - name: Build Split APKs
         run: flutter build apk --release --split-per-abi
 
