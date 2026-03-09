@@ -5,13 +5,14 @@ import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
 
 class ProjectCards {
-
-  
-  static Widget buildSortDropdown(BuildContext context, ProjectController controller) {
-    return  PopupMenuButton<SortOption>(
+  static Widget buildSortDropdown(
+    BuildContext context,
+    ProjectController controller,
+  ) {
+    return PopupMenuButton<SortOption>(
       offset: const Offset(0, 45),
       // Fix: Removed alpha to remove glass effect. Using a solid theme color.
-      color: context.colors.infoContainer, 
+      color: context.colors.infoContainer,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       icon: Icon(Icons.sort_by_alpha, color: context.colors.textGrey, size: 20),
@@ -28,15 +29,34 @@ class ProjectCards {
             ),
           ),
         ),
-        _buildSortItem(context, SortOption.name, "Name", controller.selectedSort.value),
-        _buildSortItem(context, SortOption.date, "Date", controller.selectedSort.value),
-        _buildSortItem(context, SortOption.size, "Size", controller.selectedSort.value),
+        _buildSortItem(
+          context,
+          SortOption.name,
+          "Name",
+          controller.selectedSort.value,
+        ),
+        _buildSortItem(
+          context,
+          SortOption.date,
+          "Date",
+          controller.selectedSort.value,
+        ),
+        _buildSortItem(
+          context,
+          SortOption.size,
+          "Size",
+          controller.selectedSort.value,
+        ),
       ],
     );
   }
 
   static PopupMenuItem<SortOption> _buildSortItem(
-    BuildContext context, SortOption value, String label, SortOption currentSelection) {
+    BuildContext context,
+    SortOption value,
+    String label,
+    SortOption currentSelection,
+  ) {
     bool isSelected = value == currentSelection;
     return PopupMenuItem<SortOption>(
       value: value,
@@ -45,7 +65,11 @@ class ProjectCards {
           SizedBox(
             width: 24,
             child: isSelected
-                ? Icon(Icons.done_all, size: 18, color: context.colors.brandSecondary)
+                ? Icon(
+                    Icons.done_all,
+                    size: 18,
+                    color: context.colors.brandSecondary,
+                  )
                 : null,
           ),
           const SizedBox(width: 8),
@@ -68,7 +92,7 @@ class ProjectCards {
         child: CustomText(
           title,
           style: context.themeText.titleMedium?.copyWith(
-            color: context.colors.brandSecondary, 
+            color: context.colors.brandSecondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -76,18 +100,21 @@ class ProjectCards {
     );
   }
 
-  
   static Widget buildListTile({
     required BuildContext context,
     required Map<String, dynamic> data,
     required String subtitle,
   }) {
     return Container(
-
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: context.colors.borderLight.withOpacity(0.5), width: 0.5)),
+        border: Border(
+          bottom: BorderSide(
+            color: context.colors.borderLight.withOpacity(0.5),
+            width: 0.5,
+          ),
+        ),
       ),
       child: Row(
         children: [
@@ -100,7 +127,8 @@ class ProjectCards {
               child: Image.network(
                 data['image'] ?? "https://via.placeholder.com/60x45",
                 fit: BoxFit.cover,
-                errorBuilder: (context, _, __) => Icon(Icons.image, color: context.colors.textLightGrey),
+                errorBuilder: (context, _, __) =>
+                    Icon(Icons.image, color: context.colors.textLightGrey),
               ),
             ),
           ),
@@ -116,7 +144,9 @@ class ProjectCards {
           ),
           CustomText(
             subtitle,
-            style: context.themeText.bodySmall?.copyWith(color: context.colors.textGrey),
+            style: context.themeText.bodySmall?.copyWith(
+              color: context.colors.textGrey,
+            ),
           ),
           // Fix: Using PopupMenuButton instead of IconButton + showMenu
           _buildProjectPopupMenu(context),
@@ -144,14 +174,17 @@ class ProjectCards {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(11),
+              ),
               child: Container(
                 width: double.infinity,
                 color: context.colors.bgSecondary,
                 child: Image.network(
                   data['image'] ?? "https://via.placeholder.com/150",
                   fit: BoxFit.cover,
-                  errorBuilder: (context, _, __) => Icon(Icons.image, color: context.colors.textLightGrey),
+                  errorBuilder: (context, _, __) =>
+                      Icon(Icons.image, color: context.colors.textLightGrey),
                 ),
               ),
             ),
@@ -184,7 +217,10 @@ class ProjectCards {
                 const SizedBox(height: 4),
                 CustomText(
                   subtitle,
-                  style: context.themeText.bodySmall?.copyWith(color: context.colors.textGrey, fontSize: 11),
+                  style: context.themeText.bodySmall?.copyWith(
+                    color: context.colors.textGrey,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -194,7 +230,6 @@ class ProjectCards {
     );
   }
 
- 
   static Widget _buildProjectPopupMenu(BuildContext context) {
     return PopupMenuButton<String>(
       padding: EdgeInsets.zero,
@@ -207,25 +242,49 @@ class ProjectCards {
       },
       itemBuilder: (context) => [
         _buildActionMenuItem(context, Icons.edit_outlined, "Rename", "rename"),
-        _buildActionMenuItem(context, Icons.visibility_outlined, "View", "view"),
+        _buildActionMenuItem(
+          context,
+          Icons.visibility_outlined,
+          "View",
+          "view",
+        ),
         _buildActionMenuItem(context, Icons.ios_share, "Export", "export"),
-        _buildActionMenuItem(context, Icons.delete_outline, "Remove", "remove", isDestructive: true),
+        _buildActionMenuItem(
+          context,
+          Icons.delete_outline,
+          "Remove",
+          "remove",
+          isDestructive: true,
+        ),
       ],
     );
   }
 
   static PopupMenuItem<String> _buildActionMenuItem(
-      BuildContext context, IconData icon, String label, String value, {bool isDestructive = false}) {
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value, {
+    bool isDestructive = false,
+  }) {
     return PopupMenuItem<String>(
       value: value,
       child: Row(
         children: [
-          Icon(icon, size: 18, color: isDestructive ? context.colors.error : context.colors.textDark),
+          Icon(
+            icon,
+            size: 18,
+            color: isDestructive
+                ? context.colors.error
+                : context.colors.textDark,
+          ),
           const SizedBox(width: 12),
           CustomText(
             label,
             style: context.themeText.bodyMedium?.copyWith(
-              color: isDestructive ? context.colors.error : context.colors.textDark,
+              color: isDestructive
+                  ? context.colors.error
+                  : context.colors.textDark,
             ),
           ),
         ],

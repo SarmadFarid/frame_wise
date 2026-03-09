@@ -11,13 +11,9 @@
 //     });
 //   }
 
-
 //   Future<List<ProjectModel>> getProjects() async {
 //     final isar = IsarService.isar;
 //     return await isar.projectModels.where().findAll();
 //   }
 
-
-
 // }
-

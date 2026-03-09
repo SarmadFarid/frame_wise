@@ -32,7 +32,7 @@ class SignUpScreen extends GetView<AuthController> {
                 'Sign up',
                 style: context.themeText.displayMedium?.copyWith(
                   color: context.colors.textBrand,
-                  fontWeight: FontWeight.w900
+                  fontWeight: FontWeight.w900,
                 ),
               ),
 
@@ -40,10 +40,10 @@ class SignUpScreen extends GetView<AuthController> {
 
               CustomText(
                 'Create account to start framing your memories.',
-                textAlign: TextAlign.start ,
+                textAlign: TextAlign.start,
                 style: context.themeText.bodyMedium?.copyWith(
                   color: context.colors.textPrimary,
-                  fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
                 ),
               ),
 
@@ -77,7 +77,6 @@ class SignUpScreen extends GetView<AuthController> {
               ),
 
               SizedBox(height: 50.h),
-              
 
               // --- BUTTON SECTION ---
               CustomButton(
@@ -90,15 +89,14 @@ class SignUpScreen extends GetView<AuthController> {
 
               SizedBox(height: 20.h),
 
-
               // --- FOOTER SECTION ---
               Center(
                 child: TextButton(
-                  onPressed: () => Get.toNamed(AppRoutes.loginView,),
-                  child: 
-                  
-                  CustomRichText(firstText: 'Already have an account? ', secondText: 'Login',  )
-                  
+                  onPressed: () => Get.toNamed(AppRoutes.loginView),
+                  child: CustomRichText(
+                    firstText: 'Already have an account? ',
+                    secondText: 'Login',
+                  ),
                 ),
               ),
             ],

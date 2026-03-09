@@ -6,13 +6,7 @@ class ApiResponse<T> {
   final T? data;
   final String? token;
 
-  ApiResponse({
-    this.success,
-    this.message,
-    this.code,
-    this.data,
-    this.token,
-  });
+  ApiResponse({this.success, this.message, this.code, this.data, this.token});
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,

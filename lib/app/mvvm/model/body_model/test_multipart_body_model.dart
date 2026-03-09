@@ -14,7 +14,5 @@ class TestMultipartBodyModel {
     this.documents,
   });
 
-  Map<String, dynamic> toJson() => {
-        'title': title,
-      };
+  Map<String, dynamic> toJson() => {'title': title};
 }

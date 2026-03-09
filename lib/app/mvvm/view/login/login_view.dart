@@ -48,7 +48,6 @@ class LoginScreen extends GetView<AuthController> {
               SizedBox(height: 60.h),
 
               /// -------- FORM SECTION ----------
-
               CustomTextField(
                 label: "Email",
                 hint: "Enter your Email Address",
@@ -64,15 +63,13 @@ class LoginScreen extends GetView<AuthController> {
                 // controller: controller.passwordController,
               ),
 
-            
-
               /// -------- FORGOT PASSWORD ----------
               Align(
                 heightFactor: 0.5.h,
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    ProfileCards.showForgotPassDialog(context); 
+                    ProfileCards.showForgotPassDialog(context);
                   },
                   child: CustomText(
                     "Forgot Password?",
@@ -84,14 +81,14 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
 
-              SizedBox(height: 50.h), 
-              // Spacer(), 
+              SizedBox(height: 50.h),
+              // Spacer(),
 
               /// -------- LOGIN BUTTON ----------
               CustomButton(
                 text: "Login ",
                 onPressed: () {
-                  Get.offAllNamed(AppRoutes.dashBoard); 
+                  Get.offAllNamed(AppRoutes.dashBoard);
                 },
               ),
 

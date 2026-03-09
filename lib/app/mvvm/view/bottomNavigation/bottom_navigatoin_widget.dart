@@ -21,9 +21,9 @@ class BottomNavigationWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surfaceCard,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25.r), 
-          topRight: Radius.circular(25.r), 
-          ),
+          topLeft: Radius.circular(25.r),
+          topRight: Radius.circular(25.r),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -43,12 +43,7 @@ class BottomNavigationWidget extends StatelessWidget {
     );
   }
 
-  Widget _item(
-    BuildContext context,
-    int index,
-    IconData icon,
-    String label,
-  ) {
+  Widget _item(BuildContext context, int index, IconData icon, String label) {
     final bool isSelected = currentIndex == index;
 
     return Expanded(
@@ -56,14 +51,14 @@ class BottomNavigationWidget extends StatelessWidget {
         onTap: () => onTap(index),
         child: Container(
           decoration: BoxDecoration(
-          borderRadius:  BorderRadius.only(
-          topLeft:  Radius.circular(index == 0 ? 25.r : 0), 
-          topRight: Radius.circular(index == 3 ? 25.r : 0), 
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(index == 0 ? 25.r : 0),
+              topRight: Radius.circular(index == 3 ? 25.r : 0),
+            ),
+            color: isSelected
+                ? context.colors.brandPrimary.withOpacity(0.1)
+                : Colors.transparent,
           ),
-          color: isSelected
-              ? context.colors.brandPrimary.withOpacity(0.1)
-              : Colors.transparent,
-               ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -95,8 +90,7 @@ class BottomNavigationWidget extends StatelessWidget {
                   color: isSelected
                       ? context.colors.textPrimary
                       : context.colors.textGrey,
-                  fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),
             ],

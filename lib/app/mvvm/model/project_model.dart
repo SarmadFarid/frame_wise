@@ -3,7 +3,6 @@ part 'project_model.g.dart';
 
 @collection
 class ProjectModel {
-
   Id id = Isar.autoIncrement;
 
   late String title;
@@ -13,5 +12,4 @@ class ProjectModel {
   late String thumbnail;
 
   late DateTime createdAt;
-
 }

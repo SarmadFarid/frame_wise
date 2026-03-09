@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 @immutable
 class AppThemeColors extends ThemeExtension<AppThemeColors> {
-
   // ===== BRAND (FIXED BOTH THEMES) =====
   final Color brandPrimary;
   final Color brandSecondary;
@@ -33,7 +32,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color textGrey;
   final Color textLightGrey;
   final Color textDisabled;
-  final Color textPrimary; 
+  final Color textPrimary;
   final Color textBrand;
   final Color textInverse;
 
@@ -93,9 +92,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   });
 
   @override
-  AppThemeColors copyWith({
-    Color? bgPrimary,
-  }) {
+  AppThemeColors copyWith({Color? bgPrimary}) {
     return this;
   }
 

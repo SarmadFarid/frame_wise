@@ -13,7 +13,7 @@ import '../../mvvm/view_model/splash/splash_binding.dart';
 
 /// Defines navigation routes for the LayerX app.
 abstract class AppRoutes {
-  AppRoutes._(); 
+  AppRoutes._();
 
   static const splashView = '/';
   static const loginView = '/login';
@@ -24,7 +24,6 @@ abstract class AppRoutes {
   static const loginAndSecurityScreen = '/LoginAndSecurityScreen';
 }
 
-
 abstract class AppPages {
   AppPages._();
 
@@ -32,40 +31,39 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.splashView,
       page: () => const SplashIntroScreen(),
-      binding: SplashBinding(), 
-      transition: Transition.fadeIn
+      binding: SplashBinding(),
+      transition: Transition.fadeIn,
     ),
     GetPage(
       name: AppRoutes.loginView,
       page: () => const LoginScreen(),
-      transition: Transition.rightToLeftWithFade
+      transition: Transition.rightToLeftWithFade,
     ),
-     GetPage(
+    GetPage(
       name: AppRoutes.signupView,
       page: () => const SignUpScreen(),
-      transition: Transition.rightToLeftWithFade
+      transition: Transition.rightToLeftWithFade,
     ),
-     GetPage(
+    GetPage(
       name: AppRoutes.dashBoard,
       page: () => const AppBottomNavigation(),
-      transition: Transition.fadeIn, 
-      bindings: [SettingBindings(), ProjectBinding() ]  
+      transition: Transition.fadeIn,
+      bindings: [SettingBindings(), ProjectBinding()],
     ),
-      GetPage(
+    GetPage(
       name: AppRoutes.subscription,
       page: () => const SubscriptionScreen(),
-      transition: Transition.rightToLeftWithFade, 
+      transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
       name: AppRoutes.profile,
-      page: () =>   ProfileScreen(),
-      transition: Transition.rightToLeftWithFade, 
+      page: () => ProfileScreen(),
+      transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
       name: AppRoutes.loginAndSecurityScreen,
-      page: () =>   LoginAndSecurityScreen(),
-      transition: Transition.rightToLeftWithFade, 
+      page: () => LoginAndSecurityScreen(),
+      transition: Transition.rightToLeftWithFade,
     ),
-
   ];
 }

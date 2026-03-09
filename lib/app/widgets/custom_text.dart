@@ -29,7 +29,7 @@ class CustomText extends StatelessWidget {
     this.letterSpacing,
     this.height,
     this.softWrap,
-    this.selectable,  
+    this.selectable,
   });
 
   @override

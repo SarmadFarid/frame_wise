@@ -59,8 +59,8 @@ class CustomTextField extends StatelessWidget {
           focusNode: focusNode,
           maxLines: isPassword ? 1 : maxLines,
           style: textTheme.bodyMedium?.copyWith(
-          color: readOnly ? colors.textGrey : colors.textDark,  
-          fontWeight: readOnly ? FontWeight.normal : FontWeight.w600,
+            color: readOnly ? colors.textGrey : colors.textDark,
+            fontWeight: readOnly ? FontWeight.normal : FontWeight.w600,
           ),
           decoration: InputDecoration(
             hintText: hint,

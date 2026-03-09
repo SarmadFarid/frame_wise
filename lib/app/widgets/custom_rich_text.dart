@@ -21,7 +21,7 @@ class CustomRichText extends StatelessWidget {
     required this.firstText,
     required this.secondText,
     this.thirdText,
-    this.style, 
+    this.style,
     this.firstTextStyle,
     this.secondTextStyle,
     this.thirdTextStyle,
@@ -45,7 +45,8 @@ class CustomRichText extends StatelessWidget {
         children: [
           TextSpan(
             text: firstText,
-            style: firstTextStyle ??
+            style:
+                firstTextStyle ??
                 baseStyle.copyWith(
                   color: context.colors.textBrand,
                   fontWeight: FontWeight.w500,
@@ -53,20 +54,23 @@ class CustomRichText extends StatelessWidget {
           ),
           TextSpan(
             text: secondText,
-            style: secondTextStyle ??
+            style:
+                secondTextStyle ??
                 baseStyle.copyWith(
                   color: context.colors.textPrimary,
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w600,
                 ),
           ),
-          if(thirdText != null) TextSpan(
-            text: thirdText,
-             style: thirdTextStyle ??
-                baseStyle.copyWith(
-                  color: context.colors.textBrand,
-                  fontWeight: FontWeight.w500
-                ),
-          ),
+          if (thirdText != null)
+            TextSpan(
+              text: thirdText,
+              style:
+                  thirdTextStyle ??
+                  baseStyle.copyWith(
+                    color: context.colors.textBrand,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
         ],
       ),
     );

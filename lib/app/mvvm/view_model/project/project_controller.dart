@@ -10,7 +10,6 @@ class ProjectController extends GetxController {
     isGridView.value = !isGridView.value;
   }
 
-   
   var todayProjects = [
     {
       'title': 'Untitled Project',

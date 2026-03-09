@@ -20,21 +20,25 @@ class ProjectListScreen extends StatelessWidget {
           slivers: [
             // Top Header Section
             _buildHeader(context, controller),
-            
+
             // Today Section
             ProjectCards.buildSectionTitle(context, 'Today'),
-            Obx(() => controller.isGridView.value 
-                ? _buildGrid(context, controller.todayProjects, true)
-                : _buildList(context, controller.todayProjects, true)),
+            Obx(
+              () => controller.isGridView.value
+                  ? _buildGrid(context, controller.todayProjects, true)
+                  : _buildList(context, controller.todayProjects, true),
+            ),
 
             // Earlier Section
             ProjectCards.buildSectionTitle(context, 'Earlier'),
-            Obx(() => controller.isGridView.value 
-                ? _buildGrid(context, controller.earlierProjects, false)
-                : _buildList(context, controller.earlierProjects, false)),
-            
+            Obx(
+              () => controller.isGridView.value
+                  ? _buildGrid(context, controller.earlierProjects, false)
+                  : _buildList(context, controller.earlierProjects, false),
+            ),
+
             // Bottom Padding
-            const SliverToBoxAdapter(child: SizedBox(height: 20)), 
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
           ],
         ),
       ),
@@ -56,16 +60,20 @@ class ProjectListScreen extends StatelessWidget {
             ),
             const Spacer(),
             // Grid / List View Toggle Button
-            Obx(() => IconButton(
-              onPressed: () => controller.toggleView(),
-              icon: Icon(
-                controller.isGridView.value ? Icons.list : Icons.grid_view_rounded, 
-                color: context.colors.textGrey, 
-                size: 20,
+            Obx(
+              () => IconButton(
+                onPressed: () => controller.toggleView(),
+                icon: Icon(
+                  controller.isGridView.value
+                      ? Icons.list
+                      : Icons.grid_view_rounded,
+                  color: context.colors.textGrey,
+                  size: 20,
+                ),
               ),
-            )),
+            ),
             const SizedBox(width: 8),
-        
+
             ProjectCards.buildSortDropdown(context, controller),
             const SizedBox(width: 8),
             Container(
@@ -77,14 +85,18 @@ class ProjectListScreen extends StatelessWidget {
               child: Row(
                 children: [
                   CustomText(
-                   "View All",
+                    "View All",
                     style: context.themeText.bodySmall?.copyWith(
                       color: context.colors.textDark,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(Icons.list_alt, size: 14, color: context.colors.textDark),
+                  Icon(
+                    Icons.list_alt,
+                    size: 14,
+                    color: context.colors.textDark,
+                  ),
                 ],
               ),
             ),
@@ -108,7 +120,6 @@ class ProjectListScreen extends StatelessWidget {
     );
   }
 
-  
   Widget _buildGrid(BuildContext context, List<dynamic> items, bool isToday) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -131,4 +142,3 @@ class ProjectListScreen extends StatelessWidget {
     );
   }
 }
- 

@@ -36,10 +36,12 @@ class SubscriptionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: context.colors.brandPrimary.withValues(alpha: 0.4)),
+        border: Border.all(
+          color: context.colors.brandPrimary.withValues(alpha: 0.4),
+        ),
         boxShadow: [
           BoxShadow(
-            color:context.colors.brandPrimary.withOpacity(0.5)   ,
+            color: context.colors.brandPrimary.withOpacity(0.5),
             blurRadius: 8.r,
             offset: const Offset(0, 2),
           ),
@@ -57,7 +59,7 @@ class SubscriptionCard extends StatelessWidget {
                 style: context.themeText.titleLarge?.copyWith(
                   color: textColor,
                   fontWeight: FontWeight.w800,
-                  fontSize: 22.sp
+                  fontSize: 22.sp,
                 ),
               ),
               RichText(
@@ -71,7 +73,7 @@ class SubscriptionCard extends StatelessWidget {
                     TextSpan(
                       text: duration,
                       style: context.themeText.bodyMedium?.copyWith(
-                        color: textColor.withOpacity(0.8), 
+                        color: textColor.withOpacity(0.8),
                       ),
                     ),
                   ],
@@ -139,4 +141,3 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 }
-

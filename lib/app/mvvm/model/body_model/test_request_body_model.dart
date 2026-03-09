@@ -5,12 +5,7 @@ class TestRequestBodyModel {
   String? note;
   File? image;
 
-  TestRequestBodyModel({
-    this.note,
-    this.image,
-  });
+  TestRequestBodyModel({this.note, this.image});
 
-  Map<String, dynamic> toJson() => {
-        'note': note,
-      };
+  Map<String, dynamic> toJson() => {'note': note};
 }

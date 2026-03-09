@@ -29,7 +29,6 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.bgLight,
 
     extensions: const [
-
       AppThemeColors(
         brandPrimary: AppColors.brandBlue,
         brandSecondary: AppColors.brandDarkBlue,
@@ -81,8 +80,8 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     textTheme: AppTypography.textTheme.apply(
-    bodyColor: AppColors.textLight,
-    displayColor: AppColors.textLight,
+      bodyColor: AppColors.textLight,
+      displayColor: AppColors.textLight,
     ),
     colorScheme: const ColorScheme(
       brightness: Brightness.dark,

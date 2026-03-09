@@ -7,19 +7,20 @@ class CustomPrinter extends LogPrinter {
   final PrettyPrinter _prettyPrinter;
 
   CustomPrinter()
-      : _prettyPrinter = PrettyPrinter(
-          methodCount: 1,
-          errorMethodCount: 6,
-          lineLength: 120,
-          colors: true,
-          printEmojis: true,
-        );
+    : _prettyPrinter = PrettyPrinter(
+        methodCount: 1,
+        errorMethodCount: 6,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
+      );
 
   @override
   List<String> log(LogEvent event) {
     final output = _prettyPrinter.log(event);
-    final formattedTime =
-        DateFormat('dd-MM-yyyy hh:mm:ss a').format(DateTime.now());
+    final formattedTime = DateFormat(
+      'dd-MM-yyyy hh:mm:ss a',
+    ).format(DateTime.now());
     final levelName = event.level.name.toUpperCase();
     return output
         .map((line) => '[📅 $formattedTime] [$levelName] $line')
@@ -35,7 +36,7 @@ class LoggerService {
     printer: CustomPrinter(),
     level: kDebugMode ? Level.trace : Level.warning,
   );
- 
+
   static void d(dynamic message, {Object? error, StackTrace? stackTrace}) {
     if (kDebugMode) _logger.d(message, error: error, stackTrace: stackTrace);
   }

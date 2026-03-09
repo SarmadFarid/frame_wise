@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class SettingBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ProfileController() , fenix: true ); 
-    Get.lazyPut(() => NotificationController() , fenix: true ); 
+    Get.lazyPut(() => ProfileController(), fenix: true);
+    Get.lazyPut(() => NotificationController(), fenix: true);
   }
 }

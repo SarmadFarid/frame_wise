@@ -20,7 +20,7 @@ class SubscriptionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                SizedBox(height: 5.h),
+              SizedBox(height: 5.h),
 
               GestureDetector(
                 onTap: () => Get.back(),
@@ -43,7 +43,7 @@ class SubscriptionScreen extends StatelessWidget {
                 ),
               ),
 
-               SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
               CustomRichText(
                 maxLines: 4,
                 textAlign: TextAlign.center,
@@ -51,11 +51,9 @@ class SubscriptionScreen extends StatelessWidget {
                 secondText: ' Deliver cleaner, sharper videos with',
                 thirdText: ' FrameWise.',
                 style: context.themeText.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                       ), 
-                    
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              
 
               SizedBox(height: 30.h),
 
@@ -64,8 +62,8 @@ class SubscriptionScreen extends StatelessWidget {
                 style: context.themeText.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w800,
                   color: context.colors.textDark,
-                  fontFamily: FontFamily.inter, 
-                  wordSpacing: -1.5
+                  fontFamily: FontFamily.inter,
+                  wordSpacing: -1.5,
                 ),
               ),
 

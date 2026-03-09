@@ -19,7 +19,12 @@ class SplashIntroScreen extends StatefulWidget {
 class _SplashIntroScreenState extends State<SplashIntroScreen> {
   int _currentIndex = 0;
 
-  final List<String> images = [AppImages.slideOne, AppImages.sllideTwo, AppImages.slideOne, AppImages.sllideTwo];
+  final List<String> images = [
+    AppImages.slideOne,
+    AppImages.sllideTwo,
+    AppImages.slideOne,
+    AppImages.sllideTwo,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -91,15 +96,17 @@ class _SplashIntroScreenState extends State<SplashIntroScreen> {
                         BoxShadow(
                           color: context.colors.brandPrimary.withOpacity(0.5),
                           blurRadius: 4.r,
-                          
-                          offset: Offset(2, 2)
+
+                          offset: Offset(2, 2),
                         ),
                       ],
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.r),
-                      child: Image.asset(imagePath, fit: BoxFit.cover , 
-                      width: Get.width * 0.70 ,
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.cover,
+                        width: Get.width * 0.70,
                       ),
                     ),
                   );
@@ -121,19 +128,20 @@ class _SplashIntroScreenState extends State<SplashIntroScreen> {
                       color: _currentIndex == entry.key
                           ? context.colors.textBrand
                           : context.colors.borderDefault,
-                   
                     ),
-
                   );
                 }).toList(),
               ),
 
               const Spacer(),
 
-              CustomButton(text: 'Get Started', onPressed: () {
-               Get.toNamed(AppRoutes.signupView, ); 
-              }), 
-               SizedBox(height: 30.h)
+              CustomButton(
+                text: 'Get Started',
+                onPressed: () {
+                  Get.toNamed(AppRoutes.signupView);
+                },
+              ),
+              SizedBox(height: 30.h),
             ],
           ),
         ),

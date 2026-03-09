@@ -15,12 +15,12 @@ class _AppBottomNavigationState extends State<AppBottomNavigation> {
   int currentIndex = 0;
 
   final List<Widget> pages = [
-    HomeScreen(),  
+    HomeScreen(),
     const Center(child: Text("Import")),
-    ProjectListScreen(), 
-     SettingScreen()
+    ProjectListScreen(),
+    SettingScreen(),
   ];
-   
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
