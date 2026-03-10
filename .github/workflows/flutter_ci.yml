@@ -110,7 +110,7 @@ jobs:
       
       - name: Upload APK to Google Drive
         run: |
-          rclone copy app-latest.apk gdrive:Flutter-APK-Builds --drive-ignore-existing=false
+          rclone copy app-latest.apk gdrive:Flutter-APK-Builds 
 
 
 
