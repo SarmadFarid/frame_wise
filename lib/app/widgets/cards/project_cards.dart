@@ -154,9 +154,8 @@ class ProjectCards {
     );
   }
 
-  // ==========================================
-  // 4. GRID VIEW TILE
-  // ==========================================
+  //   GRID VIEW TILE
+
   static Widget buildGridTile({
     required BuildContext context,
     required Map<String, dynamic> data,

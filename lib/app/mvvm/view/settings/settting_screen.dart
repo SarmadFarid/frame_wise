@@ -71,7 +71,7 @@ class SettingScreen extends StatelessWidget {
                                 child: Container(
                                   height: 50.r,
                                   width: double.infinity,
-                                  color: Colors.black.withValues(alpha:0.65),
+                                  color: Colors.black.withValues(alpha: 0.65),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [

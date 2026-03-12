@@ -77,11 +77,7 @@ class SignUpScreen extends GetView<AuthController> {
               SizedBox(height: 50.h),
 
               // --- BUTTON SECTION ---
-              CustomButton(
-                text: "Register ",
-                onPressed: () {
-                },
-              ),
+              CustomButton(text: "Register ", onPressed: () {}),
 
               SizedBox(height: 20.h),
 

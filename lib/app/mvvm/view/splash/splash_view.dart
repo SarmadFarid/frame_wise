@@ -93,7 +93,9 @@ class _SplashIntroScreenState extends State<SplashIntroScreen> {
                       color: context.colors.surfaceCard,
                       boxShadow: [
                         BoxShadow(
-                          color: context.colors.brandPrimary.withValues(alpha:0.5),
+                          color: context.colors.brandPrimary.withValues(
+                            alpha: 0.5,
+                          ),
                           blurRadius: 4.r,
 
                           offset: Offset(2, 2),

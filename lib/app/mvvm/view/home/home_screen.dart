@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/core/utills/app_assets.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
+import 'package:frame_wise/app/core/utills/app_routes.dart';
+import 'package:frame_wise/app/mvvm/view/import/import_video_screen.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -94,7 +97,7 @@ class HomeScreen extends StatelessWidget {
 
                     ElevatedButton.icon(
                       onPressed: () {
-                        /// navigate to import screen
+                        Get.toNamed(AppRoutes.importvideoScren);
                       },
                       icon: const Icon(Icons.add, color: Colors.white),
                       label: const Text(
