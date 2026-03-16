@@ -25,7 +25,7 @@ class FrameIssueModel {
     required this.severity,
   });
 }
-
+ 
 class ProjectJsonModel {
   final String projectId;
   final String title;
@@ -34,7 +34,7 @@ class ProjectJsonModel {
   final String videoHash;
   final String thumbnail;
   final int fps;
-  final List<int> deletedFrames;
+  final List deletedFrames;
   final DateTime createdAt;
 
   ProjectJsonModel({
@@ -51,15 +51,15 @@ class ProjectJsonModel {
 
   factory ProjectJsonModel.fromJson(Map<String, dynamic> json) {
     return ProjectJsonModel(
-      projectId: json['projectId'],
-      title: json['title'],
-      videoPath: json['videoPath'],
-      proxyPath: json['proxyPath'],
-      videoHash: json['videoHash'],
-      thumbnail: json['thumbnail'],
-      fps: json['fps'],
-      deletedFrames: json['deletedFrames'],
-      createdAt: json['createdAt'],
+      projectId: json['projectId'] as String? ?? "",
+      title: json['title'] as String? ?? "" ,
+      videoPath: json['videoPath'] as String? ?? "" ,
+      proxyPath: json['proxyPath'] as String? ?? "" ,
+      videoHash: json['videoHash'] as String? ?? "",
+      thumbnail: json['thumbnail'] as String? ?? "" ,
+      fps: json['fps'] as int ,
+      deletedFrames:json['deletedFrames'] ?? [] ,
+      createdAt: json['createdAt'] is String ? DateTime.parse(json['createdAt']) : json['createdAt'] as DateTime ,
     );
   }
 

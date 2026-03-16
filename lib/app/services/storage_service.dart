@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
+import 'package:frame_wise/app/services/logger_service.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 
 class StorageService {
+  StorageService._();
+  static StorageService instance = StorageService._();
 
-  static Future<Directory> createProjectDirectory() async {
+  final box = GetStorage();
+  final String projectKey = 'all_projects';
+
+  Future<Directory> createProjectDirectory() async {
     final dir = await getApplicationDocumentsDirectory();
     final projectsDirectory = Directory('${dir.path}/projects');
     if (!await projectsDirectory.exists()) {
@@ -24,24 +30,27 @@ class StorageService {
     return projectDir;
   }
 
-
-  static Future<void> saveProject(
-    Directory projectDir,
-    ProjectJsonModel project,
-  ) async {
-    final file = File('${projectDir.path}/project.json');
-
-    await file.writeAsString(jsonEncode(project.toJson()), flush: true);
+  Future<void> saveProject(ProjectJsonModel project) async {
+    LoggerService.i("project for saving : ${project.title}");
+    dynamic storedData = box.read(projectKey);
+    // LoggerService.i('stroed data : $storedData');
+    List<dynamic> projects = [];
+    if (storedData is List) {
+      projects = List.from(storedData);
+    } else {
+      LoggerService.i("Old data was Map/Corrupted. Starting fresh list.");
+    }
+    projects.add(project.toJson());
+    // LoggerService.i('projects: $projects');
+    await box.write(projectKey, projects);
+    LoggerService.i(
+      "Saved successfully! Total projects in DB: ${projects.length}",
+    );
   }
 
-
-  static Future<ProjectJsonModel> loadProject(Directory projectDir) async {
-    final file = File('${projectDir.path}/project.json');
-    final json = jsonDecode(await file.readAsString());
-
-    return ProjectJsonModel.fromJson(json);
+  Future<List<ProjectJsonModel>> loadProject() async {  
+    List data = box.read(projectKey) ?? [];
+    LoggerService.i('data : $data');  
+    return data.map((e) => ProjectJsonModel.fromJson(e)).toList();
   }
-
-
-  
 }

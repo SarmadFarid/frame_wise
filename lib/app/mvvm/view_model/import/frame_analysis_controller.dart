@@ -1,24 +1,41 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
-import 'package:frame_wise/app/services/frame_extractor_service.dart';
+import 'package:frame_wise/app/services/frame_service.dart';
+import 'package:frame_wise/app/services/logger_service.dart';
+import 'package:frame_wise/app/services/storage_service.dart';
+import 'package:frame_wise/app/services/video_services.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:crypto/crypto.dart';
 
 class FrameAnalysisController extends GetxController {
+  FrameExtractorService frameExtractorService = FrameExtractorService.instance;
+  VideoServices videoServices = VideoServices.instance;
+  StorageService storageService = StorageService.instance;
+
   late VideoPlayerController videoController;
-  late ProjectJsonModel currentProject;
-  RxList<FrameModel> frames = <FrameModel>[].obs;
-  RxBool loading = true.obs;
+  RxBool isVideoInitialized = false.obs;
+  late final ProjectJsonModel currentProject;
+  RxList<String> framePaths = <String>[].obs;
+
+  RxBool loading = false.obs;
   RxBool isPlaying = false.obs;
   RxInt currentFrame = 0.obs;
   RxDouble zoom = 1.0.obs;
-  List<FrameModel> removedFrames = [];
+  RxSet<int> deletedFrames = <int>{}.obs;
   final ScrollController timelineScroll = ScrollController();
   final double frameWidth = 80;
   Timer? playheadTimer;
+  final RxDouble progress = 0.0.obs;
+  final RxString progressMessage = ''.obs;
+  final double fps = 2.0;
 
   late String videoPath;
   late String projectDirPath;
@@ -26,62 +43,144 @@ class FrameAnalysisController extends GetxController {
   late String thumbnailPath;
 
   @override
-  void onInit() async {
+  void onInit() {
     final args = Get.arguments as Map<String, dynamic>;
 
-    log('arguments : $args');
+    LoggerService.i('arguments : $args');
     videoPath = args['videoPath'];
     projectDirPath = args['projectDirPath'];
     projectId = args['projectId'];
     thumbnailPath = args['thumbnailPath'];
 
-    await loadFrames();
+    loadFrames();
     super.onInit();
   }
 
   Future<void> loadFrames() async {
-    final result = await FrameExtractorService.extractFrames(
-      videoPath: videoPath,
-      projectDirPath: projectDirPath,
-      projectId: projectId,
-      thumbnailPath: thumbnailPath,
-    );
+    try {
+      loading.value = true;
+      progress.value = 0.0;
+      progressMessage.value = "Preparing video...";
 
-    if (result.isNotEmpty) {
-      currentProject = result['projectData'];
-      List<String> framePaths = result['frames'];
+      final File videoFile = File(videoPath);
 
-      frames.assignAll(
-        framePaths.asMap().entries.map(
-          (e) => FrameModel(
-            index: e.key,
-            path: e.value,
-            timestamp: e.key / 2,
-            issueDetected: false,
-          ),
-        ),
-      );
+      final stat = videoFile.statSync();
+      final videoIdentity =
+          "${stat.size}_${stat.modified.millisecondsSinceEpoch}";
+      final videoHash = md5.convert(utf8.encode(videoIdentity)).toString();
 
-      videoController = VideoPlayerController.file(
-        File(currentProject.proxyPath),
-      );
+      final dir = await getApplicationDocumentsDirectory();
+      final frameCacheDir = Directory('${dir.path}/frame_cache/$videoHash');
+      final statusFile = File('${frameCacheDir.path}/.extraction_success');
+      final proxyPath = '$projectDirPath/proxy.mp4';
+
+      if (!await statusFile.exists()) {
+        if (await frameCacheDir.exists()) {
+          await frameCacheDir.delete(recursive: true);
+        }
+
+        await frameCacheDir.create(recursive: true);
+        LoggerService.i('generating proxy video');
+        progressMessage.value = "Generating proxy video...";
+        final proxyVideoSuccess = await videoServices.generateProxyVideo(
+          originalPath: videoPath,
+          proxyPath: proxyPath,
+          onProgress: (p) {
+            progress.value = p * 0.5;
+          },
+        );
+
+        if (proxyVideoSuccess == false) {
+          throw Exception("FFmpeg could not create proxy video.");
+        }
+
+        LoggerService.i('extracting frames from proxy video');
+        final success = await frameExtractorService.extractVideoFrames(
+          proxyPath,
+          frameCacheDir.path,
+          (p) {
+            progress.value = 0.5 + (p * 0.5);
+          },
+        );
+        if (success) await statusFile.create();
+      } else {
+        if (!await File(proxyPath).exists()) {
+          LoggerService.w('generate proxy video if already not');
+          final proxy = await videoServices.generateProxyVideo(
+            originalPath: videoPath,
+            proxyPath: proxyPath,
+            onProgress: (p) {
+              progress.value = p * 0.5;
+            },
+          );
+
+          if (proxy == false) {
+            throw Exception("Proxy generation failed");
+          }
+        }
+      }
+
+      final proxyFile = File(proxyPath);
+      if (!await proxyFile.exists() || await proxyFile.length() == 0) {
+        throw Exception('Proxy Video not reaady');
+      }
+
+      videoController = VideoPlayerController.file(proxyFile);
+
       await videoController.initialize();
+      isVideoInitialized.value = true;
+      LoggerService.d('is vidoe initialized: $isVideoInitialized');
+      videoController.addListener(() {
+        if (videoController.value.hasError) {
+          LoggerService.e(
+            'Video error: ${videoController.value.errorDescription}',
+          );
+        }
+      });
 
+      LoggerService.i('start frame sorting');
+      final List<String> paths = await compute(
+        getSortedFrames,
+        frameCacheDir.path,
+      );
+      framePaths.assignAll(paths);
+       
+      currentProject = ProjectJsonModel(
+        projectId: projectId,
+        title: 'New project',
+        videoPath: videoPath,
+        proxyPath: proxyPath,
+        videoHash: videoHash,
+        thumbnail: thumbnailPath,
+        fps: 2,
+        deletedFrames: <int>[],
+        createdAt: DateTime.now(),
+      );
+      LoggerService.i('saving json project');
+      await storageService.saveProject(currentProject);
+
+      if (framePaths.isNotEmpty) {
+        startTracking();
+      }
+    } catch (e, stack) {
+      LoggerService.e("Error", error: e, stackTrace: stack);
+    } finally {
       loading.value = false;
-
-      startTracking();
     }
   }
 
   void startTracking() {
-    final fps = 2;
     playheadTimer?.cancel();
-    playheadTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
+    playheadTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       if (!videoController.value.isInitialized) return;
+      if (framePaths.isEmpty) return;
+
       final ms = videoController.value.position.inMilliseconds;
 
-      final pos = (ms / 1000) * fps;
-      final frameIndex = pos.floor().clamp(0, frames.length - 1);
+      final frameIndex = ((ms / 1000) * fps).floor().clamp(
+        0,
+        framePaths.length - 1,
+      );
       if (frameIndex != currentFrame.value) {
         currentFrame.value = frameIndex;
         autoScroll(frameIndex);
@@ -91,34 +190,51 @@ class FrameAnalysisController extends GetxController {
   }
 
   void autoScroll(int frame) {
-    currentFrame.value = frame;
-    final offset = frame * frameWidth * zoom.value;
-    timelineScroll.animateTo(
-      offset,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-    );
+    final offset = (frame * frameWidth * zoom.value).toDouble();
+    if (!timelineScroll.hasClients) return;
+    final current = timelineScroll.offset;
+    final viewport = timelineScroll.position.viewportDimension;
+
+    if (offset < current || offset > current + viewport - frameWidth) {
+      if (!timelineScroll.position.isScrollingNotifier.value) {
+        timelineScroll.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    }
   }
 
   void selectFrame(int index) {
-    if (index < 0 || index >= frames.length) return;
+    if (framePaths.isEmpty) return;
+    index = index.clamp(0, framePaths.length - 1);
+    pause();
     currentFrame.value = index;
-    videoController.seekTo(Duration(seconds: index));
+    videoController.seekTo(
+      Duration(milliseconds: (index * 1000 / fps).round()),
+    );
 
     autoScroll(index);
   }
 
   String getVideoDuration() {
-    final duration = videoController.value.duration;
-    final totalSeconds = duration.inSeconds;
-    final hours = totalSeconds ~/ 3600;
-    final minutes = (totalSeconds % 3600) ~/ 60;
-    final seconds = totalSeconds % 60;
+    if (!videoController.value.isInitialized) return "00:00";
 
-    String durationStr = hours > 0
-        ? '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
-        : '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    return durationStr;
+    final duration = videoController.value.duration;
+
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
+
+    return '${minutes.toString().padLeft(2, '0')}:'
+        '${seconds.toString().padLeft(2, '0')}';
   }
 
   void play() {
@@ -132,48 +248,39 @@ class FrameAnalysisController extends GetxController {
   }
 
   void deleteFrame(int index) {
-    if (index < 0 || index >= frames.length) return;
-    final frame = frames[index];
-    removedFrames.add(frame);
-    frames.removeAt(index);
+    if (index < 0 || index >= framePaths.length) return;
+    deletedFrames.add(index);
+    LoggerService.i('deleted frame: $index');
   }
 
   void undoDelete() {
-    if (removedFrames.isEmpty) return;
-    frames.add(removedFrames.removeLast());
+    if (deletedFrames.isEmpty) return;
+    deletedFrames.remove(deletedFrames.last);
+  }
+
+  double get frameSize => frameWidth * zoom.value;
+  double get timelineOffset => currentFrame.value * frameSize;
+
+  List<int> getViisibleFrames(double viewPortWidth) {
+    final framesOnScreen = (viewPortWidth / frameSize).ceil();
+    const buffer = 10;
+    final start = (currentFrame.value - framesOnScreen - buffer).clamp(
+      0,
+      framePaths.length,
+    );
+    final end = (currentFrame.value + framesOnScreen + buffer).clamp(
+      0,
+      framePaths.length,
+    );
+
+    return [start, end];
   }
 
   @override
   void onClose() {
     playheadTimer?.cancel();
-
     videoController.dispose();
-
     timelineScroll.dispose();
-
     super.onClose();
   }
 }
-
-/* {
-save metadata example for project and latter exporting
-  "id": "project_01",
-  "title": "My Video",
-  "videoPath": "/gallery/video.mp4",
-  "framesFolder": "/app/frames_abc/",
-  "thumbnail": "/app/thumbs/project_01.png",
-  "fps": 2,
-  "deletedFrames": [3,5],
-  "createdAt": "2026-03-11"
-} 
-
-Structure for saving projects 
-app_documents/
-   projects/
-      project_1/
-         project.json
-         thumbnail.jpg
-         frames/
-
-         
-*/

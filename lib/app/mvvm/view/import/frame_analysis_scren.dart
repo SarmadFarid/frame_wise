@@ -7,26 +7,33 @@ import 'package:frame_wise/app/widgets/video_preview_widget.dart';
 import 'package:get/get.dart';
 
 class FrameAnalysisScreen extends StatelessWidget {
-  const FrameAnalysisScreen({super.key, });
-
+  const FrameAnalysisScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final controller = Get.find<FrameAnalysisController>();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Frame Analysis")),
 
       body: Obx(() {
-
         if (controller.loading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(controller.progressMessage.value),
+              SizedBox(height: 20),
+              LinearProgressIndicator(value: controller.progress.value),
+              SizedBox(height: 10),
+              Text("${(controller.progress.value * 100).toStringAsFixed(0)} %"),
+            ],
+          );
         }
 
         return Column(
           children: [
             /// VIDEO PREVIEW
+            ///
             SizedBox(height: 220.h, child: VideoPreviewWidget()),
 
             /// VIDEO CONTROLS
@@ -64,15 +71,17 @@ class FrameAnalysisScreen extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // Obx(() {
-            //   return
-            //    Text(controller.getVideoDuration());
-            // }) ,
             Row(
               children: [
                 Icon(Icons.play_circle_fill),
                 SizedBox(width: 5.w),
-                Text(controller.getVideoDuration()),
+                Obx(
+                  () => Text(
+                    controller.isVideoInitialized.value
+                        ? controller.getVideoDuration()
+                        : "00:00",
+                  ),
+                ),
               ],
             ),
 
@@ -84,14 +93,13 @@ class FrameAnalysisScreen extends StatelessWidget {
             /// TIMELINE RULER
             SizedBox(
               height: 25,
-              child: TimelineRulerWidget(frameCount: controller.frames.length),
+              child: TimelineRulerWidget(
+                frameCount: controller.framePaths.length,
+              ),
             ),
 
             /// FRAME TIMELINE
-            SizedBox(
-              height: 80,
-              child: TimelineFramesWidget(frames: controller.frames),
-            ),
+            SizedBox(height: 80.h, child: TimelineFramesWidget()),
 
             /// ISSUE PANEL
             Expanded(child: IssuePanelWidget()),

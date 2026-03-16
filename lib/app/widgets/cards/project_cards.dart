@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frame_wise/app/mvvm/model/video_models.dart';
 import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
@@ -84,15 +88,20 @@ class ProjectCards {
     );
   }
 
-  static Widget buildSectionTitle(BuildContext context, String title) {
+  static Widget buildSectionTitle(BuildContext context, String title, ProjectController controller) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: CustomText(
-          title,
-          style: context.themeText.titleMedium?.copyWith(
-            color: context.colors.brandSecondary,
-            fontWeight: FontWeight.bold,
+        child: GestureDetector( 
+         onTap: (){
+                  controller.loadAllProjects(); 
+                },
+          child: CustomText(
+            title,
+            style: context.themeText.titleMedium?.copyWith(
+              color: context.colors.brandSecondary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -101,9 +110,12 @@ class ProjectCards {
 
   static Widget buildListTile({
     required BuildContext context,
-    required Map<String, dynamic> data,
+    required ProjectJsonModel data,
     required String subtitle,
   }) {
+    // Thumbnail path nikalna
+    final String imagePath = data.thumbnail;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -120,21 +132,27 @@ class ProjectCards {
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Container(
-              width: 60,
-              height: 45,
+              width: 60.w,
+              height: 45.h,
               color: context.colors.bgSecondary,
-              child: Image.network(
-                data['image'] ?? "https://via.placeholder.com/60x45",
-                fit: BoxFit.cover,
-                errorBuilder: (context, _, __) =>
-                    Icon(Icons.image, color: context.colors.textLightGrey),
-              ),
+
+              child: imagePath.isNotEmpty
+                  ? Image.file(
+                      File(imagePath),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, _, __) => Icon(
+                        Icons.broken_image,
+                        size: 20.sp,
+                        color: context.colors.textLightGrey,
+                      ),
+                    )
+                  : Icon(Icons.image, color: context.colors.textLightGrey),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: CustomText(
-              data['title'] ?? 'Untitled Project',
+              data.title,
               style: context.themeText.bodyLarge?.copyWith(
                 color: context.colors.textDark,
                 fontWeight: FontWeight.w500,
@@ -147,20 +165,22 @@ class ProjectCards {
               color: context.colors.textGrey,
             ),
           ),
-          // Fix: Using PopupMenuButton instead of IconButton + showMenu
           _buildProjectPopupMenu(context),
         ],
       ),
     );
   }
 
-  //   GRID VIEW TILE
-
+   
   static Widget buildGridTile({
     required BuildContext context,
-    required Map<String, dynamic> data,
+    required ProjectJsonModel data,
     required String subtitle,
   }) {
+     
+    final String imagePath = data.thumbnail;
+    final String title = data.title;
+
     return Container(
       decoration: BoxDecoration(
         color: context.colors.surfaceCard,
@@ -178,12 +198,17 @@ class ProjectCards {
               child: Container(
                 width: double.infinity,
                 color: context.colors.bgSecondary,
-                child: Image.network(
-                  data['image'] ?? "https://via.placeholder.com/150",
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, _, __) =>
-                      Icon(Icons.image, color: context.colors.textLightGrey),
-                ),
+                // FIX: Image.file for Local Thumbnails
+                child: imagePath.isNotEmpty
+                    ? Image.file(
+                        File(imagePath),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, _, __) => Icon(
+                          Icons.broken_image,
+                          color: context.colors.textLightGrey,
+                        ),
+                      )
+                    : Icon(Icons.image, color: context.colors.textLightGrey),
               ),
             ),
           ),
@@ -196,15 +221,14 @@ class ProjectCards {
                   children: [
                     Expanded(
                       child: CustomText(
-                        data['title'] ?? 'Untitled Project',
+                        title,
                         style: context.themeText.bodyMedium?.copyWith(
                           color: context.colors.textDark,
                           fontWeight: FontWeight.w600,
                         ),
-                        // overflow: TextOverflow.ellipsis, // Add this back if supported by your CustomText
+                        maxLines: 1,
                       ),
                     ),
-                    // Fix: Using PopupMenuButton instead of InkWell + showMenu
                     SizedBox(
                       height: 24,
                       width: 24,

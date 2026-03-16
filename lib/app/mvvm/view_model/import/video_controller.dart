@@ -9,9 +9,9 @@ import 'package:frame_wise/app/services/storage_service.dart';
 import 'package:frame_wise/app/services/video_services.dart';
 import 'package:get/get.dart';
 
-
-
 class ImportVideoController extends GetxController {
+  VideoServices videoServices = VideoServices.instance;
+  StorageService storageServices = StorageService.instance;
   var loading = false.obs;
   Future<void> pickVideo() async {
     try {
@@ -19,22 +19,23 @@ class ImportVideoController extends GetxController {
       if (result == null) return;
       final videoPath = result.files.single.path!;
       loading.value = true;
-      final projectdir = await StorageService.createProjectDirectory();
-      final projectId = projectdir.path.split('/').last ;
-      final thumbnailPath = '${projectdir.path}/thumb.png' ;
-      await VideoServices.generateThumbnail(videoPath, thumbnailPath);
+      final projectdir = await storageServices.createProjectDirectory();
+      final projectId = projectdir.path.split('/').last;
+      final thumbnailPath = await videoServices.generateThumbnail(
+        videoPath,
+        projectdir.path,
+      );
 
       Get.to(
         () => FrameAnalysisScreen(),
-        binding: FrameAnalysisBinding() ,
-        arguments:{
-        'videoPath': videoPath,
-        'projectDirPath': projectdir.path,
-        'projectId': projectId,
-        'thumbnailPath': thumbnailPath,  
-      },
+        binding: FrameAnalysisBinding(),
+        arguments: {
+          'videoPath': videoPath,
+          'projectDirPath': projectdir.path,
+          'projectId': projectId,
+          'thumbnailPath': thumbnailPath,
+        },
       );
-
     } catch (e) {
       log(e.toString());
     } finally {
