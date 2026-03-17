@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/core/utills/app_assets.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
+import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/core/utills/app_routes.dart';
-import 'package:frame_wise/app/mvvm/view/import/import_video_screen.dart';
 import 'package:frame_wise/app/widgets/custom_rich_text.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProjectController>();
     final colors = context.colors;
 
     return Scaffold(
@@ -121,10 +124,13 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomText(
-                    "Recent Projects",
-                    style: context.themeText.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                  GestureDetector(
+                    onTap: () => controller.loadAllProjects(),
+                    child: CustomText(
+                      "Recent Projects",
+                      style: context.themeText.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
 
@@ -139,8 +145,10 @@ class HomeScreen extends StatelessWidget {
                 height: 170.h,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: controller.projects.length,
                   itemBuilder: (context, index) {
+                    final project = controller.projects[index];
+                    final date = controller.formatDate(project.createdAt);
                     return Container(
                       width: 140.w,
                       margin: EdgeInsets.only(right: 12.w),
@@ -165,29 +173,55 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               child: Center(
-                                child: Image.asset(
-                                  AppImages.zipImage,
-                                  fit: BoxFit.cover,
-                                  height: 80.h,
-                                ),
+                                child: project.thumbnail.isNotEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(12.r),
+                                        ),
+                                        child: Image.file(
+                                          File(project.thumbnail),
+                                          fit: BoxFit.cover,
+                                          // height: 80.h,
+                                          width: double.infinity,
+                                          errorBuilder: (context, _, __) =>
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 14.h,
+                                                  horizontal: 8.w,
+                                                ),
+                                                child: Image.asset(
+                                                  AppImages.zipImage,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.image,
+                                        color: context.colors.surfaceCard,
+                                      ),
                               ),
                             ),
                           ),
-
+                          Divider(
+                            color: context.colors.borderLight,
+                            height: 1.h,
+                            thickness: 1,
+                          ),
                           Padding(
                             padding: EdgeInsets.all(8.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomText(
-                                  "Untitled Project",
-                                  style: context.themeText.bodyMedium,
+                                  project.projectId.split('_').last,
+                                  style: context.themeText.labelLarge?.copyWith(fontWeight: FontWeight.w500),
                                 ),
 
                                 CustomText(
-                                  "April 20, 2025",
+                                  date,
                                   style: context.themeText.bodySmall?.copyWith(
-                                    color: colors.textGrey,
+                                    color: colors.textDark.withValues(alpha: 0.4),
                                   ),
                                 ),
                               ],

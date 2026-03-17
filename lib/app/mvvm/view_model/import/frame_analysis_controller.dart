@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
+import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/services/frame_service.dart';
 import 'package:frame_wise/app/services/logger_service.dart';
 import 'package:frame_wise/app/services/storage_service.dart';
@@ -19,10 +20,11 @@ class FrameAnalysisController extends GetxController {
   FrameExtractorService frameExtractorService = FrameExtractorService.instance;
   VideoServices videoServices = VideoServices.instance;
   StorageService storageService = StorageService.instance;
+  final projectController = Get.find<ProjectController>();
 
   late VideoPlayerController videoController;
   RxBool isVideoInitialized = false.obs;
-  late final ProjectJsonModel currentProject;
+  ProjectJsonModel? currentProject;
   RxList<String> framePaths = <String>[].obs;
 
   RxBool loading = false.obs;
@@ -55,7 +57,7 @@ class FrameAnalysisController extends GetxController {
     loadFrames();
     super.onInit();
   }
-
+ 
   Future<void> loadFrames() async {
     try {
       loading.value = true;
@@ -65,22 +67,26 @@ class FrameAnalysisController extends GetxController {
       final File videoFile = File(videoPath);
 
       final stat = videoFile.statSync();
-      final videoIdentity =
-          "${stat.size}_${stat.modified.millisecondsSinceEpoch}";
+      final String fileName = videoFile.path.split('/').last;
+      final int fileSize = stat.size;
+      final videoIdentity = "${fileName}_$fileSize";
       final videoHash = md5.convert(utf8.encode(videoIdentity)).toString();
+      LoggerService.i("Generated Video Hash: $videoHash");
 
       final dir = await getApplicationDocumentsDirectory();
       final frameCacheDir = Directory('${dir.path}/frame_cache/$videoHash');
       final statusFile = File('${frameCacheDir.path}/.extraction_success');
-      final proxyPath = '$projectDirPath/proxy.mp4';
+      final proxyPath = '${frameCacheDir.path}/proxy.mp4';
+      final proxyFile = File(proxyPath);
 
-      if (!await statusFile.exists()) {
-        if (await frameCacheDir.exists()) {
-          await frameCacheDir.delete(recursive: true);
-        }
-
+      // Check : Kya folder pehle se hai?
+      if (!await frameCacheDir.exists()) {
         await frameCacheDir.create(recursive: true);
-        LoggerService.i('generating proxy video');
+      }
+
+      // Check : Kya Proxy already bani hui hai?
+      if (!await proxyFile.exists() || await proxyFile.length() == 0) {
+        LoggerService.i('generating proxy video in cache ');
         progressMessage.value = "Generating proxy video...";
         final proxyVideoSuccess = await videoServices.generateProxyVideo(
           originalPath: videoPath,
@@ -93,7 +99,12 @@ class FrameAnalysisController extends GetxController {
         if (proxyVideoSuccess == false) {
           throw Exception("FFmpeg could not create proxy video.");
         }
+      } else {
+        LoggerService.i('✅ Proxy already exists, skipping generation.');
+      }
 
+      // Check : Kya Frames extracted hain?
+      if (!await statusFile.exists()) {
         LoggerService.i('extracting frames from proxy video');
         final success = await frameExtractorService.extractVideoFrames(
           proxyPath,
@@ -102,25 +113,13 @@ class FrameAnalysisController extends GetxController {
             progress.value = 0.5 + (p * 0.5);
           },
         );
-        if (success) await statusFile.create();
+        LoggerService.d('frames extraction status from proxy video : $success');
+        if (success) await statusFile.create(recursive: true);
+        LoggerService.d('check sttus file: ${await statusFile.exists()}'); 
       } else {
-        if (!await File(proxyPath).exists()) {
-          LoggerService.w('generate proxy video if already not');
-          final proxy = await videoServices.generateProxyVideo(
-            originalPath: videoPath,
-            proxyPath: proxyPath,
-            onProgress: (p) {
-              progress.value = p * 0.5;
-            },
-          );
-
-          if (proxy == false) {
-            throw Exception("Proxy generation failed");
-          }
-        }
+        LoggerService.i('✅ Frames already extracted, skipping.');
       }
 
-      final proxyFile = File(proxyPath);
       if (!await proxyFile.exists() || await proxyFile.length() == 0) {
         throw Exception('Proxy Video not reaady');
       }
@@ -144,7 +143,7 @@ class FrameAnalysisController extends GetxController {
         frameCacheDir.path,
       );
       framePaths.assignAll(paths);
-       
+
       currentProject = ProjectJsonModel(
         projectId: projectId,
         title: 'New project',
@@ -153,11 +152,9 @@ class FrameAnalysisController extends GetxController {
         videoHash: videoHash,
         thumbnail: thumbnailPath,
         fps: 2,
-        deletedFrames: <int>[],
+        deletedFrames: deletedFrames.toList() as List,
         createdAt: DateTime.now(),
       );
-      LoggerService.i('saving json project');
-      await storageService.saveProject(currentProject);
 
       if (framePaths.isNotEmpty) {
         startTracking();
@@ -167,6 +164,28 @@ class FrameAnalysisController extends GetxController {
     } finally {
       loading.value = false;
     }
+  }
+
+  Future<void> saveCurrentProject() async {
+    LoggerService.i('Saving project state...');
+    if (currentProject == null) {
+      LoggerService.w("Project not fully loaded, skipping save.");
+      return;
+    }
+    currentProject = ProjectJsonModel(
+      projectId: currentProject!.projectId,
+      title: currentProject!.title,
+      videoPath: currentProject!.videoPath,
+      proxyPath: currentProject!.proxyPath,
+      videoHash: currentProject!.videoHash,
+      thumbnail: currentProject!.thumbnail,
+      fps: currentProject!.fps,
+      deletedFrames: deletedFrames.toList() as List,
+      createdAt: currentProject!.createdAt,
+    );
+     
+    await storageService.saveProject(currentProject!, projectController);
+    LoggerService.i('✅ Project Saved Successfully');
   }
 
   void startTracking() {
@@ -278,6 +297,7 @@ class FrameAnalysisController extends GetxController {
 
   @override
   void onClose() {
+    saveCurrentProject();
     playheadTimer?.cancel();
     videoController.dispose();
     timelineScroll.dispose();

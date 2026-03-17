@@ -5,6 +5,7 @@ import 'package:frame_wise/app/mvvm/model/video_models.dart';
 import 'package:frame_wise/app/services/logger_service.dart';
 import 'package:frame_wise/app/services/storage_service.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 enum SortOption { name, date, size }
@@ -32,16 +33,14 @@ class ProjectController extends GetxController {
 
   Future<void> loadAllProjects() async {
     try {
-      isloading(true); 
-      final List<ProjectJsonModel> data = await storageService.loadProject(); 
+      isloading(true);
+      final List<ProjectJsonModel> data = await storageService.loadProject();
       data.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       projects.assignAll(data);
       LoggerService.i(projects);
-    } 
-     catch (e) {
-      LoggerService.e('Error loading saves projects', error: e); 
-     }
-    finally {
+    } catch (e) {
+      LoggerService.e('Error loading saves projects', error: e);
+    } finally {
       isloading.value = false;
     }
   }
@@ -49,6 +48,11 @@ class ProjectController extends GetxController {
   Future<void> deleteProject(String projectId) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
+
+      projects.removeWhere(
+        (i) =>
+            i.projectId.trim().toLowerCase() == projectId.trim().toLowerCase(),
+      );
       final projectDirPath = '${dir.path}/projects/$projectId';
 
       final projectsDirectory = Directory(projectDirPath);
@@ -66,5 +70,9 @@ class ProjectController extends GetxController {
         stackTrace: stack,
       );
     }
+  }
+
+  String formatDate(DateTime dateStr) {
+    return DateFormat('dd MMM, yyyy').format(dateStr);
   }
 }

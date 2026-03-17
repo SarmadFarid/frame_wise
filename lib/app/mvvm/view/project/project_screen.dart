@@ -25,17 +25,19 @@ class ProjectListScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          
-
           return CustomScrollView(
             slivers: [
               _buildHeader(context, controller),
 
-              ProjectCards.buildSectionTitle(context, 'Your Projects', controller),
-                 
+              ProjectCards.buildSectionTitle(
+                context,
+                'Your Projects',
+                controller,
+              ),
+
               controller.isGridView.value
-                  ? _buildGrid(context, controller.projects)
-                  : _buildList(context, controller.projects),
+                  ? _buildGrid(context, controller)
+                  : _buildList(context, controller),
 
               SliverToBoxAdapter(child: SizedBox(height: 20.h)),
             ],
@@ -78,20 +80,26 @@ class ProjectListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildList(BuildContext context, List<ProjectJsonModel> items) {
+  Widget _buildList(BuildContext context, ProjectController controller) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
-        final project = items[index];
+        final project = controller.projects[index];
         return ProjectCards.buildListTile(
           context: context,
           data: project,
           subtitle: _formatDate(project.createdAt),
+          ontapRename: () {},
+          ontapView: () {},
+          ontapExport: () {},
+          ontapRemove: () {
+            controller.deleteProject(project.projectId);
+          },
         );
-      }, childCount: items.length),
+      }, childCount: controller.projects.length),
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<ProjectJsonModel> items) {
+  Widget _buildGrid(BuildContext context, ProjectController controller) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverGrid(
@@ -102,30 +110,19 @@ class ProjectListScreen extends StatelessWidget {
           childAspectRatio: 0.85,
         ),
         delegate: SliverChildBuilderDelegate((context, index) {
-          final project = items[index];
+          final project = controller.projects[index];
           return ProjectCards.buildGridTile(
             context: context,
             data: project,
             subtitle: _formatDate(project.createdAt),
+            ontapRename: () {},
+            ontapView: () {},
+            ontapExport: () {},
+            ontapRemove: () {
+              controller.deleteProject(project.projectId);
+            },
           );
-        }, childCount: items.length),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.video_library_outlined,
-            size: 60,
-            color: context.colors.textGrey,
-          ),
-          SizedBox(height: 10.h),
-          CustomText("No projects yet", style: context.themeText.bodyMedium),
-        ],
+        }, childCount: controller.projects.length),
       ),
     );
   }
@@ -134,5 +131,4 @@ class ProjectListScreen extends StatelessWidget {
   String _formatDate(DateTime dateStr) {
     return DateFormat('dd MMM, yyyy').format(dateStr);
   }
-  
 }

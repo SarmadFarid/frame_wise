@@ -51,7 +51,7 @@ abstract class AppPages {
       name: AppRoutes.dashBoard,
       page: () => const AppBottomNavigation(),
       transition: Transition.fadeIn,
-      bindings: [SettingBindings(), ProjectBinding(), SettingBindings(), FrameAnalysisBinding()],
+      bindings: [SettingBindings(), ProjectBinding(), SettingBindings(), ImportVideoBinding()],
     ),
     GetPage(
       name: AppRoutes.subscription,
@@ -72,7 +72,7 @@ abstract class AppPages {
       name: AppRoutes.importvideoScren,
       page: () => ImportVideoScreen(),
       transition: Transition.rightToLeftWithFade,
-      binding: FrameAnalysisBinding()
+      binding: ImportVideoBinding()
     ),
   ];
 }

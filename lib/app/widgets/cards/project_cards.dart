@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -88,20 +89,19 @@ class ProjectCards {
     );
   }
 
-  static Widget buildSectionTitle(BuildContext context, String title, ProjectController controller) {
+  static Widget buildSectionTitle(
+    BuildContext context,
+    String title,
+    ProjectController controller,
+  ) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: GestureDetector( 
-         onTap: (){
-                  controller.loadAllProjects(); 
-                },
-          child: CustomText(
-            title,
-            style: context.themeText.titleMedium?.copyWith(
-              color: context.colors.brandSecondary,
-              fontWeight: FontWeight.bold,
-            ),
+        child: CustomText(
+          title,
+          style: context.themeText.titleMedium?.copyWith(
+            color: context.colors.brandSecondary,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -112,6 +112,10 @@ class ProjectCards {
     required BuildContext context,
     required ProjectJsonModel data,
     required String subtitle,
+     required  VoidCallback ontapRename,   
+   required  VoidCallback ontapView,   
+   required  VoidCallback ontapExport,   
+   required  VoidCallback ontapRemove,   
   }) {
     // Thumbnail path nikalna
     final String imagePath = data.thumbnail;
@@ -131,29 +135,30 @@ class ProjectCards {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Container(
+            child: SizedBox(
               width: 60.w,
-              height: 45.h,
-              color: context.colors.bgSecondary,
-
-              child: imagePath.isNotEmpty
-                  ? Image.file(
-                      File(imagePath),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, _, __) => Icon(
-                        Icons.broken_image,
-                        size: 20.sp,
-                        color: context.colors.textLightGrey,
-                      ),
-                    )
-                  : Icon(Icons.image, color: context.colors.textLightGrey),
+              height: 50.h,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: context.colors.bgSecondary),
+                child: imagePath.isNotEmpty
+                    ? Image.file(
+                        File(imagePath),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, _, __) => Icon(
+                          Icons.broken_image,
+                          size: 20.sp,
+                          color: context.colors.textGrey,
+                        ),
+                      )
+                    : Icon(Icons.image, color: context.colors.textLightGrey),
+              ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 14.w),
           Expanded(
             child: CustomText(
-              data.title,
-              style: context.themeText.bodyLarge?.copyWith(
+              data.projectId.split('_').last,
+              style: context.themeText.bodyMedium?.copyWith(
                 color: context.colors.textDark,
                 fontWeight: FontWeight.w500,
               ),
@@ -165,26 +170,28 @@ class ProjectCards {
               color: context.colors.textGrey,
             ),
           ),
-          _buildProjectPopupMenu(context),
+          _buildProjectPopupMenu(context, ontapRename:  ontapRename , ontapView: ontapView , ontapExport:  ontapExport, ontapRemove: ontapRemove),
         ],
       ),
     );
   }
 
-   
   static Widget buildGridTile({
     required BuildContext context,
     required ProjectJsonModel data,
     required String subtitle,
+     required  VoidCallback ontapRename,   
+   required  VoidCallback ontapView,   
+   required  VoidCallback ontapExport,   
+   required  VoidCallback ontapRemove,   
   }) {
-     
     final String imagePath = data.thumbnail;
-    final String title = data.title;
+    final String title = data.projectId.split('_').last;
 
     return Container(
       decoration: BoxDecoration(
         color: context.colors.surfaceCard,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: context.colors.borderLight),
       ),
       child: Column(
@@ -195,20 +202,22 @@ class ProjectCards {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(11),
               ),
-              child: Container(
+              child: SizedBox(
+                // height: 60.h,
                 width: double.infinity,
-                color: context.colors.bgSecondary,
-                // FIX: Image.file for Local Thumbnails
-                child: imagePath.isNotEmpty
-                    ? Image.file(
-                        File(imagePath),
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, _, __) => Icon(
-                          Icons.broken_image,
-                          color: context.colors.textLightGrey,
-                        ),
-                      )
-                    : Icon(Icons.image, color: context.colors.textLightGrey),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: context.colors.bgSecondary),
+                  child: imagePath.isNotEmpty
+                      ? Image.file(
+                          File(imagePath),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, _, __) => Icon(
+                            Icons.broken_image,
+                            color: context.colors.textLightGrey,
+                          ),
+                        )
+                      : Icon(Icons.image, color: context.colors.textLightGrey),
+                ),
               ),
             ),
           ),
@@ -232,7 +241,7 @@ class ProjectCards {
                     SizedBox(
                       height: 24,
                       width: 24,
-                      child: _buildProjectPopupMenu(context),
+                      child: _buildProjectPopupMenu(context, ontapRename:  ontapRename , ontapView: ontapView , ontapExport:  ontapExport, ontapRemove: ontapRemove),
                     ),
                   ],
                 ),
@@ -252,31 +261,38 @@ class ProjectCards {
     );
   }
 
-  static Widget _buildProjectPopupMenu(BuildContext context) {
+  static Widget _buildProjectPopupMenu(BuildContext context, {
+   required  VoidCallback ontapRename,   
+   required  VoidCallback ontapView,   
+   required  VoidCallback ontapExport,   
+   required  VoidCallback ontapRemove,   
+  }) {
     return PopupMenuButton<String>(
       padding: EdgeInsets.zero,
       icon: Icon(Icons.more_vert, color: context.colors.textGrey, size: 20),
       color: context.colors.surfaceElevated,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      onSelected: (value) {
-        // Handle dropdown actions here (Rename, View, etc.)
+      onSelected: (value) { 
         debugPrint("Selected action: $value");
       },
       itemBuilder: (context) => [
-        _buildActionMenuItem(context, Icons.edit_outlined, "Rename", "rename"),
+        _buildActionMenuItem(context, Icons.edit_outlined, "Rename", "rename", ontapRename ),
         _buildActionMenuItem(
           context,
           Icons.visibility_outlined,
           "View",
           "view",
+          ontapView
         ),
-        _buildActionMenuItem(context, Icons.ios_share, "Export", "export"),
+        _buildActionMenuItem(context, Icons.ios_share, "Export", "export",   
+         ontapExport ),
         _buildActionMenuItem(
           context,
           Icons.delete_outline,
           "Remove",
           "remove",
-          isDestructive: true,
+           ontapRemove ,
+          isDestructive: true, 
         ),
       ],
     );
@@ -285,12 +301,15 @@ class ProjectCards {
   static PopupMenuItem<String> _buildActionMenuItem(
     BuildContext context,
     IconData icon,
-    String label,
-    String value, {
+    String label, 
+    String value, 
+    VoidCallback ontap , 
+    {
     bool isDestructive = false,
   }) {
     return PopupMenuItem<String>(
       value: value,
+      onTap: ontap ,
       child: Row(
         children: [
           Icon(

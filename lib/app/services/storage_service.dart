@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
+import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/services/logger_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,8 +31,10 @@ class StorageService {
     return projectDir;
   }
 
-  Future<void> saveProject(ProjectJsonModel project) async {
-    LoggerService.i("project for saving : ${project.title}");
+  Future<void> saveProject(ProjectJsonModel project, ProjectController controller) async {
+    LoggerService.i("deleted frames  : ${project.deletedFrames}");
+    controller.projects.add(project);  
+    
     dynamic storedData = box.read(projectKey);
     // LoggerService.i('stroed data : $storedData');
     List<dynamic> projects = [];
