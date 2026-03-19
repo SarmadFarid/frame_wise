@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +36,11 @@ class ProjectListScreen extends StatelessWidget {
                 controller,
               ),
 
-              controller.isGridView.value
-                  ? _buildGrid(context, controller)
-                  : _buildList(context, controller),
+              Obx(
+                () => controller.isGridView.value
+                    ? _buildGrid(context, controller)
+                    : _buildList(context, controller),
+              ),
 
               SliverToBoxAdapter(child: SizedBox(height: 20.h)),
             ],
@@ -88,7 +91,10 @@ class ProjectListScreen extends StatelessWidget {
           context: context,
           data: project,
           subtitle: _formatDate(project.createdAt),
-          ontapRename: () {},
+          ontapRename: () {
+            ProjectCards.showRenameDialog(context, controller ,project.projectId); 
+           
+          },
           ontapView: () {},
           ontapExport: () {},
           ontapRemove: () {
@@ -115,9 +121,18 @@ class ProjectListScreen extends StatelessWidget {
             context: context,
             data: project,
             subtitle: _formatDate(project.createdAt),
-            ontapRename: () {},
-            ontapView: () {},
-            ontapExport: () {},
+            ontapRename: () {
+              controller.renameProject(
+                projectId: project.projectId,
+                newName: 'project',
+              );
+            },
+            ontapView: () {
+              log('ontap view');
+            },
+            ontapExport: () {
+              log('ontap export');
+            },
             ontapRemove: () {
               controller.deleteProject(project.projectId);
             },

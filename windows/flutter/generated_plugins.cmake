@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_timezone
+  gal
   permission_handler_windows
 )
 

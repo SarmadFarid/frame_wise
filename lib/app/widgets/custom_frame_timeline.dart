@@ -22,8 +22,18 @@ class TimelineToolbarWidget extends StatelessWidget {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.copy),
-          onPressed: controller.undoDelete,
+          icon:   Icon(Icons.undo_rounded, color:  controller.deletedFrames.isEmpty ? context.colors.textDisabled : context.colors.textDark,),
+          onPressed:(){
+         if(controller.deletedFrames.isNotEmpty) {
+          controller.undoDelete();
+         }
+          } 
+        ),
+        IconButton(
+          icon: const Icon(Icons.download_for_offline_rounded),
+          onPressed: () {
+            controller.downloadFrame(controller.currentFrame.value);
+          },
         ),
         // const Spacer(),
         Obx(() => Text("Frame ${controller.currentFrame.value}")),
@@ -221,8 +231,6 @@ class FrameTileWidget extends StatelessWidget {
                                 ),
                               ]
                             : [],
-
-                        
                       ),
                       child: Image.file(
                         File(path),

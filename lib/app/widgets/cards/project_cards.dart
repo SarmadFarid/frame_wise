@@ -6,7 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
 import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
+import 'package:frame_wise/app/widgets/custom_button.dart';
 import 'package:frame_wise/app/widgets/custom_text.dart';
+import 'package:frame_wise/app/widgets/custom_text_field.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ProjectCards {
   static Widget buildSortDropdown(
@@ -112,10 +116,10 @@ class ProjectCards {
     required BuildContext context,
     required ProjectJsonModel data,
     required String subtitle,
-     required  VoidCallback ontapRename,   
-   required  VoidCallback ontapView,   
-   required  VoidCallback ontapExport,   
-   required  VoidCallback ontapRemove,   
+    required VoidCallback ontapRename,
+    required VoidCallback ontapView,
+    required VoidCallback ontapExport,
+    required VoidCallback ontapRemove,
   }) {
     // Thumbnail path nikalna
     final String imagePath = data.thumbnail;
@@ -157,7 +161,7 @@ class ProjectCards {
           SizedBox(width: 14.w),
           Expanded(
             child: CustomText(
-              data.projectId.split('_').last,
+              data.title,
               style: context.themeText.bodyMedium?.copyWith(
                 color: context.colors.textDark,
                 fontWeight: FontWeight.w500,
@@ -170,7 +174,13 @@ class ProjectCards {
               color: context.colors.textGrey,
             ),
           ),
-          _buildProjectPopupMenu(context, ontapRename:  ontapRename , ontapView: ontapView , ontapExport:  ontapExport, ontapRemove: ontapRemove),
+          _buildProjectPopupMenu(
+            context,
+            ontapRename: ontapRename,
+            ontapView: ontapView,
+            ontapExport: ontapExport,
+            ontapRemove: ontapRemove,
+          ),
         ],
       ),
     );
@@ -180,13 +190,13 @@ class ProjectCards {
     required BuildContext context,
     required ProjectJsonModel data,
     required String subtitle,
-     required  VoidCallback ontapRename,   
-   required  VoidCallback ontapView,   
-   required  VoidCallback ontapExport,   
-   required  VoidCallback ontapRemove,   
+    required VoidCallback ontapRename,
+    required VoidCallback ontapView,
+    required VoidCallback ontapExport,
+    required VoidCallback ontapRemove,
   }) {
     final String imagePath = data.thumbnail;
-    final String title = data.projectId.split('_').last;
+    final String title = data.title;
 
     return Container(
       decoration: BoxDecoration(
@@ -241,7 +251,13 @@ class ProjectCards {
                     SizedBox(
                       height: 24,
                       width: 24,
-                      child: _buildProjectPopupMenu(context, ontapRename:  ontapRename , ontapView: ontapView , ontapExport:  ontapExport, ontapRemove: ontapRemove),
+                      child: _buildProjectPopupMenu(
+                        context,
+                        ontapRename: ontapRename,
+                        ontapView: ontapView,
+                        ontapExport: ontapExport,
+                        ontapRemove: ontapRemove,
+                      ),
                     ),
                   ],
                 ),
@@ -261,38 +277,50 @@ class ProjectCards {
     );
   }
 
-  static Widget _buildProjectPopupMenu(BuildContext context, {
-   required  VoidCallback ontapRename,   
-   required  VoidCallback ontapView,   
-   required  VoidCallback ontapExport,   
-   required  VoidCallback ontapRemove,   
+  static Widget _buildProjectPopupMenu(
+    BuildContext context, {
+    required VoidCallback ontapRename,
+    required VoidCallback ontapView,
+    required VoidCallback ontapExport,
+    required VoidCallback ontapRemove,
   }) {
     return PopupMenuButton<String>(
       padding: EdgeInsets.zero,
       icon: Icon(Icons.more_vert, color: context.colors.textGrey, size: 20),
       color: context.colors.surfaceElevated,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      onSelected: (value) { 
+      onSelected: (value) {
         debugPrint("Selected action: $value");
       },
       itemBuilder: (context) => [
-        _buildActionMenuItem(context, Icons.edit_outlined, "Rename", "rename", ontapRename ),
+        _buildActionMenuItem(
+          context,
+          Icons.edit_outlined,
+          "Rename",
+          "rename",
+          ontapRename,
+        ),
         _buildActionMenuItem(
           context,
           Icons.visibility_outlined,
           "View",
           "view",
-          ontapView
+          ontapView,
         ),
-        _buildActionMenuItem(context, Icons.ios_share, "Export", "export",   
-         ontapExport ),
+        _buildActionMenuItem(
+          context,
+          Icons.ios_share,
+          "Export",
+          "export",
+          ontapExport,
+        ),
         _buildActionMenuItem(
           context,
           Icons.delete_outline,
           "Remove",
           "remove",
-           ontapRemove ,
-          isDestructive: true, 
+          ontapRemove,
+          isDestructive: true,
         ),
       ],
     );
@@ -301,15 +329,14 @@ class ProjectCards {
   static PopupMenuItem<String> _buildActionMenuItem(
     BuildContext context,
     IconData icon,
-    String label, 
-    String value, 
-    VoidCallback ontap , 
-    {
+    String label,
+    String value,
+    VoidCallback ontap, {
     bool isDestructive = false,
   }) {
     return PopupMenuItem<String>(
       value: value,
-      onTap: ontap ,
+      onTap: ontap,
       child: Row(
         children: [
           Icon(
@@ -332,4 +359,78 @@ class ProjectCards {
       ),
     );
   }
+
+  static void showRenameDialog(
+    BuildContext context,
+    ProjectController controller,
+    String projectId,
+  ) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+
+        elevation: 2,
+        child: Container(
+          width: Get.width * 0.85,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: context.colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 6.r)],
+          ),
+
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomText(
+                textAlign: TextAlign.center,
+                'Rename Your Project',
+                style: context.themeText.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.textBrand,
+                ),
+              ),
+              SizedBox(height: 3.h),
+              CustomText(
+                'Enter the name you used to rename the project',
+                textAlign: TextAlign.center,
+                style: context.themeText.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.colors.textDark.withValues(alpha: 0.7),
+                ),
+              ),
+
+              SizedBox(height: 30.h),
+              CustomTextField(
+                label: 'New Name',
+                hint: 'enter your new name',
+                prefixIcon: Icons.text_snippet_outlined,
+              ),
+
+              SizedBox(height: 10.h),
+
+              CustomButton(
+                text: 'Save',
+                onPressed: () async {
+                  await controller.renameProject(
+                    projectId: projectId,
+                    newName: 'New name' ,
+                  );
+                  Get.back();
+                },
+                bgColor: context.colors.brandPrimary,
+                textColor: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void showEmailSendDialog(BuildContext context) {}
 }

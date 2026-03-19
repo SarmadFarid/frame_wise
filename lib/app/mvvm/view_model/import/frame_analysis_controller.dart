@@ -11,6 +11,7 @@ import 'package:frame_wise/app/services/frame_service.dart';
 import 'package:frame_wise/app/services/logger_service.dart';
 import 'package:frame_wise/app/services/storage_service.dart';
 import 'package:frame_wise/app/services/video_services.dart';
+import 'package:gal/gal.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -57,20 +58,14 @@ class FrameAnalysisController extends GetxController {
     loadFrames();
     super.onInit();
   }
- 
+
   Future<void> loadFrames() async {
     try {
       loading.value = true;
       progress.value = 0.0;
       progressMessage.value = "Preparing video...";
 
-      final File videoFile = File(videoPath);
-
-      final stat = videoFile.statSync();
-      final String fileName = videoFile.path.split('/').last;
-      final int fileSize = stat.size;
-      final videoIdentity = "${fileName}_$fileSize";
-      final videoHash = md5.convert(utf8.encode(videoIdentity)).toString();
+      final videoHash = projectId.split('_').last;
       LoggerService.i("Generated Video Hash: $videoHash");
 
       final dir = await getApplicationDocumentsDirectory();
@@ -115,7 +110,7 @@ class FrameAnalysisController extends GetxController {
         );
         LoggerService.d('frames extraction status from proxy video : $success');
         if (success) await statusFile.create(recursive: true);
-        LoggerService.d('check sttus file: ${await statusFile.exists()}'); 
+        LoggerService.d('check sttus file: ${await statusFile.exists()}');
       } else {
         LoggerService.i('✅ Frames already extracted, skipping.');
       }
@@ -146,7 +141,7 @@ class FrameAnalysisController extends GetxController {
 
       currentProject = ProjectJsonModel(
         projectId: projectId,
-        title: 'New project',
+        title: projectId.split('_').last,
         videoPath: videoPath,
         proxyPath: proxyPath,
         videoHash: videoHash,
@@ -183,7 +178,7 @@ class FrameAnalysisController extends GetxController {
       deletedFrames: deletedFrames.toList() as List,
       createdAt: currentProject!.createdAt,
     );
-     
+
     await storageService.saveProject(currentProject!, projectController);
     LoggerService.i('✅ Project Saved Successfully');
   }
@@ -277,6 +272,50 @@ class FrameAnalysisController extends GetxController {
     deletedFrames.remove(deletedFrames.last);
   }
 
+  Future<void> downloadFrame(int index) async {
+    if (index < 0 || index >= framePaths.length) {
+      LoggerService.e("invalid frame index: $index");
+      return;
+    }
+
+    String currentFramePath = framePaths[index];
+    File imageFile = File(currentFramePath);
+
+    if (!await imageFile.exists()) {
+      LoggerService.e("File not found at: $currentFramePath");
+      return;
+    }
+
+    try {
+      bool hasAccess = await Gal.hasAccess();
+      if (!hasAccess) {
+        final granted = await Gal.requestAccess();
+        if (!granted) {
+          Get.snackbar(
+            "Permission Denied",
+            "Please allow gallery access from settings to save frames.",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return;
+        }
+      }
+
+      await Gal.putImage(currentFramePath, album: 'FrameWise');
+      LoggerService.i("Frame $index saved to gallery successfully.");
+
+      Get.snackbar(
+        "Success",
+        "Frame saved to Gallery (FrameWise Album)",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } on GalException catch (e) {
+      LoggerService.e("Gal Error: ${e.type}");
+      Get.snackbar("Gallery Error", "Could not save: ${e.type.name}");
+    } catch (e) {
+      LoggerService.e("Unknown Error saving frame: $e");
+     }
+  }
+   
   double get frameSize => frameWidth * zoom.value;
   double get timelineOffset => currentFrame.value * frameSize;
 
