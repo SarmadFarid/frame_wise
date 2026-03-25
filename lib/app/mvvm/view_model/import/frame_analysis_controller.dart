@@ -41,8 +41,7 @@ class FrameAnalysisController extends GetxController {
   final double fps = 2.0;
 
   late String videoPath;
-  late String projectDirPath;
-  late String projectId;
+   late String projectId;
   late String thumbnailPath;
 
   @override
@@ -51,8 +50,7 @@ class FrameAnalysisController extends GetxController {
 
     LoggerService.i('arguments : $args');
     videoPath = args['videoPath'];
-    projectDirPath = args['projectDirPath'];
-    projectId = args['projectId'];
+     projectId = args['projectId'];
     thumbnailPath = args['thumbnailPath'];
 
     loadFrames();

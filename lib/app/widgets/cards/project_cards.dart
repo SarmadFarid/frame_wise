@@ -19,8 +19,7 @@ class ProjectCards {
   ) {
     return PopupMenuButton<SortOption>(
       offset: const Offset(0, 45),
-      // Fix: Removed alpha to remove glass effect. Using a solid theme color.
-      color: context.colors.infoContainer,
+      color: context.colors.brandPrimary,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       icon: Icon(Icons.sort_by_alpha, color: context.colors.textGrey, size: 20),
@@ -386,26 +385,10 @@ class ProjectCards {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomText(
-                textAlign: TextAlign.center,
-                'Rename Your Project',
-                style: context.themeText.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.textBrand,
-                ),
-              ),
-              SizedBox(height: 3.h),
-              CustomText(
-                'Enter the name you used to rename the project',
-                textAlign: TextAlign.center,
-                style: context.themeText.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: context.colors.textDark.withValues(alpha: 0.7),
-                ),
-              ),
 
-              SizedBox(height: 30.h),
+              SizedBox(height: 10.h),
               CustomTextField(
+                controller: controller.renameController,
                 label: 'New Name',
                 hint: 'enter your new name',
                 prefixIcon: Icons.text_snippet_outlined,
@@ -418,7 +401,7 @@ class ProjectCards {
                 onPressed: () async {
                   await controller.renameProject(
                     projectId: projectId,
-                    newName: 'New name' ,
+                    newName: controller.renameController.text.isNotEmpty ? controller.renameController.text.toString() : 'dafault name' ,
                   );
                   Get.back();
                 },

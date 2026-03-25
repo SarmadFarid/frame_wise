@@ -214,7 +214,8 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomText(
-                                  project.projectId.split('_').last,
+                                  maxLines: 1, 
+                                  project.title,
                                   style: context.themeText.labelLarge?.copyWith(fontWeight: FontWeight.w500),
                                 ),
 

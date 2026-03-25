@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frame_wise/app/mvvm/binidngs/frame_analysis_binding.dart';
 import 'package:frame_wise/app/mvvm/model/video_models.dart';
+import 'package:frame_wise/app/mvvm/view/import/frame_analysis_scren.dart';
 import 'package:frame_wise/app/mvvm/view_model/project/project_controller.dart';
 import 'package:frame_wise/app/core/theme/theme_extensions.dart';
 import 'package:frame_wise/app/widgets/cards/project_cards.dart';
@@ -92,10 +94,23 @@ class ProjectListScreen extends StatelessWidget {
           data: project,
           subtitle: _formatDate(project.createdAt),
           ontapRename: () {
-            ProjectCards.showRenameDialog(context, controller ,project.projectId); 
-           
+            ProjectCards.showRenameDialog(
+              context,
+              controller,
+              project.projectId,
+            );
           },
-          ontapView: () {},
+          ontapView: () {
+            Get.to(
+              () => FrameAnalysisScreen(),
+              binding: FrameAnalysisBinding(),
+              arguments: {
+                'videoPath': project.videoPath,
+                'projectId': project.projectId,
+                'thumbnailPath': project.thumbnail,
+              },
+            );
+          },
           ontapExport: () {},
           ontapRemove: () {
             controller.deleteProject(project.projectId);
@@ -121,15 +136,25 @@ class ProjectListScreen extends StatelessWidget {
             context: context,
             data: project,
             subtitle: _formatDate(project.createdAt),
-            ontapRename: () {
-              controller.renameProject(
-                projectId: project.projectId,
-                newName: 'project',
-              );
-            },
-            ontapView: () {
-              log('ontap view');
-            },
+             ontapRename: () {
+             ProjectCards.showRenameDialog(
+              context,
+              controller,
+              project.projectId,
+             );
+           },
+             ontapView: () {
+            Get.to(
+              () => FrameAnalysisScreen(),
+              binding: FrameAnalysisBinding(),
+              arguments: {
+                'videoPath': project.videoPath,
+                'projectId': project.projectId,
+                'thumbnailPath': project.thumbnail,
+              },
+            );
+          },
+         
             ontapExport: () {
               log('ontap export');
             },

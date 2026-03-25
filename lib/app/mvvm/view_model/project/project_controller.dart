@@ -17,8 +17,13 @@ class ProjectController extends GetxController {
   var isloading = false.obs;
   var selectedSort = SortOption.name.obs;
   var isGridView = false.obs;
-  TextEditingController renameController = TextEditingController(); 
-   
+  TextEditingController renameController = TextEditingController();
+
+  @override
+  void onInit() {
+    loadAllProjects();
+    super.onInit();
+  }
 
   void toggleView() {
     isGridView.value = !isGridView.value;
@@ -26,12 +31,27 @@ class ProjectController extends GetxController {
 
   void updateSort(SortOption option) {
     selectedSort.value = option;
+
+    sortProjectList();
+    projects.refresh();
   }
 
-  @override
-  void onInit() {
-    loadAllProjects();
-    super.onInit();
+  void sortProjectList() {
+    switch (selectedSort.value) {
+      case SortOption.date:
+        projects.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case SortOption.name:
+        projects.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case SortOption.size:
+        projects.sort((a, b) {
+          int aFileSize = File(a.videoPath).lengthSync();
+          int bFileSize = File(b.videoPath).lengthSync();
+          return aFileSize.compareTo(bFileSize);
+        });
+        break;
+    }
   }
 
   Future<void> loadAllProjects() async {
@@ -105,6 +125,7 @@ class ProjectController extends GetxController {
         projectId: projectId,
         newName: newName,
       );
+      renameController.clear();
       LoggerService.i('project rename successfully');
     } catch (e, stack) {
       LoggerService.e(

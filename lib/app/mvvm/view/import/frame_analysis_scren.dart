@@ -128,6 +128,7 @@ class FrameAnalysisScreen extends StatelessWidget {
             const SizedBox(height: 8),
 
             Row(
+              mainAxisAlignment: MainAxisAlignment.center ,
               children: [
                 Icon(Icons.play_circle_fill),
                 SizedBox(width: 5.w),
